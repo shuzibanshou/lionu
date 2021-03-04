@@ -90,11 +90,72 @@ class Receive extends BaseController
 	        exit('paramers empty');
 	    }
 	} */
+    
+    /**
+     * 接收媒体广告点击数据-Android
+     */
+    public function androidClick(){
+        $get = $this->request->getGet(null, FILTER_SANITIZE_MAGIC_QUOTES);
+        $clickData = array(
+            'ip'=>$get['ip'],
+            'plan_id'=>$get['plan_id'],
+            'channel_id'=>$get['channel_id'],
+            'mac_md5'=>$get['mac'],
+            'androidid_md5'=>$get['androidid'],
+            'imei_md5'=>$get['imei'],
+            'oaid'=>$get['oaid'],
+            'appid'=>$get['app_id'],
+            'click_time'=>$get['ts']
+        );
+        $db = \Config\Database::connect();
+        $db->setDatabase('test');
+        $res = $this->insert($db, 'log_android_click_data', $clickData);
+        if(!$res){
+             //TODO写错误日志并推送消息到前端
+         }
+    }
+    
+    /**
+     * 接收媒体广告点击数据-IOS
+     */
+    public function iosClick(){
+        $get = $this->request->getGet(null, FILTER_SANITIZE_MAGIC_QUOTES);
+        $clickData = array(
+            'ip'=>$get['ip'],
+            'plan_id'=>$get['plan_id'],
+            'channel_id'=>$get['channel_id'],
+            'idfa'=>$get['idfa'],
+            'idfa_md5'=>md5($get['idfa']),
+            'mac'=>$get['mac'],
+            'mac_md5'=>md5($get['mac']),
+            'ua'=>$get['ua'],
+            'model'=>$get['model'],
+            'appid'=>$get['app_id'],
+            'click_time'=>$get['ts']
+        );
+        $db = \Config\Database::connect();
+        $db->setDatabase('test');
+        $res = $this->insert($db, 'log_ios_click_data', $clickData);
+        if(!$res){
+            //TODO写错误日志并推送消息到前端
+        }
+    }
+    
+    private function insert($db, $tb_name = '', $new_data = [])
+    {
+        $fields = implode(',', array_keys($new_data));
+        $flags = implode(',', array_fill(0, count($new_data), '?'));
+        $values = array_values($new_data);
+        $insert_sql = "INSERT INTO {$tb_name}(" . $fields . ") VALUES (" . $flags . ")";
+        $res = $db->query($insert_sql, $values);
+        return $res;
+    }
 	
 	/**
 	 * 接收设备启动消息
 	 */
 	public function launch(){
+	    _json(array('code'=>200,'msg'=>'ok'),1);
 	    $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();
@@ -124,6 +185,7 @@ class Receive extends BaseController
 	 * 接收设备注册消息
 	 */
 	public function reg(){
+	    _json(array('code'=>200,'msg'=>'ok'),1);
 	    $deviceRegData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();
@@ -153,6 +215,7 @@ class Receive extends BaseController
 	 * 接收设备付费消息
 	 */
 	public function pay(){
+	    _json(array('code'=>200,'msg'=>'ok'),1);
 	    $devicePayData = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();

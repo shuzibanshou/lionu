@@ -42,6 +42,7 @@ class Plan extends BaseController
                 $plan['app_os'] = $apps[$plan['app_id']]['app_os'];
                 $plan['app_name'] = $apps[$plan['app_id']]['app_name'];
                 $plan['channel_name'] = $channels[$plan['channel_id']]['channel_name'];
+                $plan['click_monitor_link'] .= '&plan_id='.$plan['id'];
             }
         }
         //获取计划总条数
@@ -209,18 +210,23 @@ class Plan extends BaseController
      */
     private function get_click_monitor_link($channel_id, $app_id)
     {
-        $host = $_SERVER['HTTP_HOST'];
         $db = \Config\Database::connect();
         $db->setDatabase('test');
+        $select_sql = "SELECT conf_value FROM u_conf WHERE conf_key=?";
+        $domain = $db->query($select_sql, ['SDKDOMAIN'])->getRowArray();
+        if (! isset($domain['conf_value']) || empty($domain['conf_value'])) {
+            throw new \Exception('sdkdomain error');
+            exit();
+        }
+        $host = $domain['conf_value'];
         $select_sql = "SELECT app_os FROM u_app WHERE id=?";
-        $app = $db->query($select_sql, [
-            $app_id
-        ]);
+        $app = $db->query($select_sql, [$app_id]);
         $app_os = $app->getRowArray();
         if (! isset($app_os['app_os']) || empty($app_os['app_os'])) {
             throw new \Exception('app os error');
             exit();
         }
+        $app_os = $app_os['app_os'];
         switch ($app_os) {
             case 1:
                 $app_os = 'android';
@@ -250,7 +256,7 @@ class Plan extends BaseController
             throw new \Exception('monitor link error');
             exit();
         }
-        return $host . '/receive/advdata?channel_id=' . $channel_id . '&app_id=' . $app_id . '&' . $link;
+        return 'http://'.$host . "/receive/{$app_os}Click?channel_id=" . $channel_id . "&app_id=" . $app_id . "&" . $link;
     }
 
     /**

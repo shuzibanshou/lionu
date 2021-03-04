@@ -53,7 +53,6 @@ class Install extends Controller
         $step = intval($step) > 1 ? intval($step) : 1;
         $this->checkInstall($step);
         $this->checkPHPEnv();
-        
         switch ($step) {
             case 1:
                 echo view('install/stepOne');
@@ -214,17 +213,25 @@ class Install extends Controller
     {
         
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
-        //测试系统配置-SDK域名是否可访问
+        //测试系统配置-SDK域名是否可访问 1s超时则说明域名未进行公网部署
         $sdkDomainUrl = trim($post['sdkdomain']).'/ping/index';
         try{
-            if(file_get_contents($sdkDomainUrl) != 'ok'){
+            $opts = array(
+                'http'=>array(
+                    'method'=>"GET",
+                    'timeout'=>1,//单位秒
+                )
+            );  
+            if(file_get_contents($sdkDomainUrl,false,stream_context_create($opts)) != 'ok'){
                 //_json(['code' => 104,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
             }
         } catch(\Exception $e){
             //_json(['code' => 104,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
          }
+         
+         //
         
-        // 测试数据库连接
+        // 测试数据库连接 
         $dbhost = trim($post['dbhost']);
         $uname = trim($post['dbuser']);
         $pwd = trim($post['dbpwd']);
@@ -441,6 +448,7 @@ class Install extends Controller
           `imei_md5` varchar(100) DEFAULT NULL,
           `oaid` varchar(100) DEFAULT NULL,
           `ip` varchar(16) DEFAULT NULL,
+          `ua` varchar(100) DEFAULT NULL,
           `appid` int(11) DEFAULT NULL,
           `channel_id` int(11) DEFAULT NULL,
           `plan_id` int(11) DEFAULT NULL,

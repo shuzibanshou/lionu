@@ -25,4 +25,91 @@ class Sysin extends NeedloginController
 	    echo 'sdk下载';
 	}
 	
+	
+	/**
+	 * 监测zookeeper & kafka & spark系统软件的运行情况
+	 */
+	public function kafkaAndSpark(){
+	    $data = array(
+	        'zookeeper'=>0,
+	        'kafka'=>0,
+	        'spark'=>0
+	    );
+	    //监测zookeeper运行情况 zookeeper默认2181端口
+	    $check_zookeeper_shell = "netstat -tnlp | grep 2181";
+	    exec($check_zookeeper_shell, $check_zookeeper_result, $check_zookeeper_status);
+
+	    if(!$check_zookeeper_status){
+	        if(is_array($check_zookeeper_result) && count($check_zookeeper_result) > 0){
+	            $data['zookeeper'] = 1;
+	        } 
+	    }
+	    //监测kafka运行情况 kafka默认9092端口
+	    $check_kafka_shell = "netstat -tnlp | grep  9092";
+	    exec($check_kafka_shell, $check_kafka_result, $check_kafka_status);
+	    if(!$check_kafka_status){
+	        if(is_array($check_kafka_result) && count($check_kafka_result) > 0){
+	            $data['kafka'] = 1;
+	        }
+	    }
+	    //监测spark运行情况 spark默认7077端口
+	    $check_spark_shell = "netstat -tnlp | grep  7077";
+	    exec($check_spark_shell, $check_spark_result, $check_spark_status);
+	    if(!$check_spark_status){
+	        if(is_array($check_spark_result) && count($check_spark_result) > 0){
+	            $data['spark'] = 1;
+	        }
+	    }
+	    _json(['code'=>200,'msg'=>'ok','data'=>$data]);
+	}
+	
+	/**
+	 * 启动zookeeper & kafka & spark系统软件
+	 */
+	public function startKafkaAndSpark(){
+	    $post = $this->request->getGET(null,FILTER_SANITIZE_MAGIC_QUOTES);
+	    $soft = $post['soft'];
+	    switch ($soft){
+	        case 'zookeeper':
+        	    //启动zookeeper
+        	    $zookeeper_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/zookeeper-server-start.sh';
+        	    $zookeeper_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/zookeeper.properties&';
+        	    $start_zookeeper_shell = $zookeeper_sh.' '.$zookeeper_conf;
+        	    
+        	    exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
+        	    //dump($start_zookeeper_status);
+        	    //dump($start_zookeeper_result);
+        	    //echo get_current_user();
+        	    //exit;
+        	    if(!$start_zookeeper_status){
+        	        if(is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0){
+        	            _json(['code'=>200,'msg'=>'启动zookeeper成功'],1);
+        	        }
+        	    }
+        	    _json(['code'=>199,'msg'=>'启动zookeeper失败'],1);
+        	    break;
+	        case 'kafka':
+        	    //启动kafka
+	            $kafka_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/kafka-server-start.sh';
+	            $kafka_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/server.properties&';
+	            $start_kafka_shell = $kafka_sh.' '.$kafka_conf;
+
+	            exec('sudo '.$start_kafka_shell, $start_kafka_result, $start_kafka_status);
+	            dump($start_kafka_status);
+	            dump($start_kafka_result);
+	            exit;
+	            if(!$start_kafka_status){
+	                if(is_array($start_kafka_result) && count($start_kafka_result) > 0){
+	                    _json(['code'=>200,'msg'=>'启动kafka成功']);
+	                }
+	            }
+	            _json(['code'=>199,'msg'=>'启动kafka失败']);
+        	    break;
+	        case 'spark':
+	            break;
+        	default:
+        	    _json(['code'=>198,'msg'=>'参数错误']);
+        	    break;
+	    }
+	}
 }

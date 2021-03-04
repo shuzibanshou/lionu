@@ -15,30 +15,58 @@
  */
 if (! function_exists('dump')) {
 
-    function dump($var, $exit = true)
+    function dump($var, $echo = true, $label = null, $strict = true)
     {
-        echo '<pre>';
-        print_r($var);
-        echo '</pre>';
+        $label = ($label === null) ? '' : rtrim($label) . ' ';
+        if (! $strict) {
+            if (ini_get('html_errors')) {
+                $output = print_r($var, true);
+                $output = '<pre>' . $label . htmlspecialchars($output, ENT_QUOTES) . '</pre>';
+            } else {
+                $output = $label . print_r($var, true);
+            }
+        } else {
+            ob_start();
+            var_dump($var);
+            $output = ob_get_clean();
+            if (! extension_loaded('xdebug')) {
+                $output = preg_replace("/\]\=\>\n(\s+)/m", '] => ', $output);
+                $output = '<pre>' . $label . htmlspecialchars($output, ENT_QUOTES) . '</pre>';
+            }
+        }
+        if ($echo) {
+            echo ($output);
+            return null;
+        } else
+            return $output;
+    }
+}
+
+if (! function_exists('_json')) {
+
+    function _json($data, $exit = 0)
+    {
         if ($exit) {
-            exit();
+            exit(json_encode($data, JSON_UNESCAPED_UNICODE));
+        } else {
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
         }
     }
 }
 
-/**
- * 加解密函數-discuz
- * 用于登录
- */
 if (! function_exists('authcode')) {
 
-    function authcode($string, $operation = 'DECODE', $key = 'lion-u', $expiry = 0)
+    // $string： 明文 或 密文
+    // $operation：DECODE表示解密,其它表示加密
+    // $key： 密匙
+    // $expiry：密文有效期
+    function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0)
     {
         // 动态密匙长度，相同的明文会生成不同密文就是依靠动态密匙
         $ckey_length = 4;
         
         // 密匙
-        //$key = md5($key ? $key : C('AU_KEY'));
+        $key = md5($key ? $key : '123456');
         
         // 密匙a会参与加解密
         $keya = md5(substr($key, 0, 16));
@@ -94,4 +122,3 @@ if (! function_exists('authcode')) {
         }
     }
 }
-
