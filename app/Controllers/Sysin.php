@@ -67,43 +67,92 @@ class Sysin extends NeedloginController
 	 * 启动zookeeper & kafka & spark系统软件
 	 */
 	public function startKafkaAndSpark(){
-	    $post = $this->request->getGET(null,FILTER_SANITIZE_MAGIC_QUOTES);
+	    $post = $this->request->getPost(null,FILTER_SANITIZE_MAGIC_QUOTES);
 	    $soft = $post['soft'];
 	    switch ($soft){
 	        case 'zookeeper':
-        	    //启动zookeeper
-        	    $zookeeper_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/zookeeper-server-start.sh';
-        	    $zookeeper_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/zookeeper.properties&';
-        	    $start_zookeeper_shell = $zookeeper_sh.' '.$zookeeper_conf;
-        	    
-        	    exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
-        	    //dump($start_zookeeper_status);
-        	    //dump($start_zookeeper_result);
-        	    //echo get_current_user();
-        	    //exit;
-        	    if(!$start_zookeeper_status){
-        	        if(is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0){
-        	            _json(['code'=>200,'msg'=>'启动zookeeper成功'],1);
-        	        }
-        	    }
-        	    _json(['code'=>199,'msg'=>'启动zookeeper失败'],1);
+	            //根据端口检查服务是否启动
+	            exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
+	            if($zookeeper_port_status != 0){
+            	    //以服务形式启动zookeeper以免卡住php进程
+            	    $zookeeper_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/zookeeper-server-start.sh';
+            	    $zookeeper_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/zookeeper.properties&';
+            	    $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' -daemon '.$zookeeper_conf;
+    
+            	    exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
+            	    
+            	    //dump($start_zookeeper_status);
+            	    //dump($start_zookeeper_result);
+            	    //echo get_current_user();
+            	    //exit;
+            	    if(!$start_zookeeper_status){
+            	        //以服务形式启动后前端不会再接收到输出信息所以需要根据端口检查服务是否启动-但启动需要缓冲时间故需要等待几秒（暂无其他更好的解决方案）
+            	        sleep(2);
+            	        exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
+            	        if($zookeeper_port_status != 0){
+            	            //若启动失败 则以非服务方式再启动一次 收集输出错误信息
+            	            $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
+            	            exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
+            	            if(is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0){
+            	                foreach ($start_zookeeper_result as $k=>$_line){
+            	                    if(stripos($_line, '] ERROR') !== false){
+            	                        $_line = isset($start_zookeeper_result[$k+1]) ? $_line."\r\n".$start_zookeeper_result[$k+1] : $_line;
+            	                        _json(['code'=>199,'msg'=>'启动zookeeper失败'.$_line],1);
+            	                    }
+            	                }
+            	            }
+            	        } else {
+            	            _json(['code'=>200,'msg'=>'启动zookeeper成功'],1);
+            	        }
+            	    } else {
+            	    _json(['code'=>199,'msg'=>'启动zookeeper失败,请检查webServer用户及php-fpm用户权限或联系运维手动启动'],1);
+            	    }
+	            } else {
+	                _json(['code'=>198,'msg'=>'zookeeper已启动,请勿重复启动'],1);
+	            }
         	    break;
 	        case 'kafka':
-        	    //启动kafka
-	            $kafka_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/kafka-server-start.sh';
-	            $kafka_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/server.properties&';
-	            $start_kafka_shell = $kafka_sh.' '.$kafka_conf;
-
-	            exec('sudo '.$start_kafka_shell, $start_kafka_result, $start_kafka_status);
-	            dump($start_kafka_status);
-	            dump($start_kafka_result);
-	            exit;
-	            if(!$start_kafka_status){
-	                if(is_array($start_kafka_result) && count($start_kafka_result) > 0){
-	                    _json(['code'=>200,'msg'=>'启动kafka成功']);
-	                }
+	            //根据端口检查服务是否启动
+	            exec("netstat -tnlp | grep  9092", $kafka_port_result, $kafka_port_status);
+	            //dump($kafka_port_status);
+	            //dump($kafka_port_result);
+	            //exit;
+	            if($kafka_port_status != 0){
+    	            //以服务形式启动kafka以免卡住php进程
+    	            $kafka_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/kafka-server-start.sh';
+    	            $kafka_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/server.properties&';
+    	            $start_kafka_shell = 'sudo '.$kafka_sh.' -daemon '.$kafka_conf;
+    
+    	            exec($start_kafka_shell, $start_kafka_result, $start_kafka_status);
+    	            //dump($start_kafka_status);
+    	            //dump($start_kafka_result);
+    	            //exit;
+    	            if(!$start_kafka_status){
+    	                //以服务形式启动后前端不会再接收到输出信息所以需要根据端口检查服务是否启动-但启动需要缓冲时间故需要等待几秒（暂无其他更好的解决方案）
+    	                sleep(2);
+    	                exec("netstat -tnlp | grep  9092", $kafka_port_result, $kafka_port_status);
+    	                if($kafka_port_status != 0){
+    	                    //若启动失败 则以非服务方式再启动一次 收集输出错误信息
+    	                    $start_kafka_shell = 'sudo '.$kafka_sh.' '.$kafka_conf;
+    	                    exec($start_kafka_shell, $start_kafka_result, $start_kafka_status);
+    	                    if(is_array($start_kafka_result) && count($start_kafka_result) > 0){
+    	                        foreach ($start_kafka_result as $k=>$_line){
+    	                            if(stripos($_line, '] ERROR') !== false){
+    	                                $_line = isset($start_kafka_result[$k+1]) ? $_line."\r\n".$start_kafka_result[$k+1] : $_line;
+    	                                _json(['code'=>199,'msg'=>'启动kafka失败'.$_line],1);
+    	                            }
+    	                        }
+    	                      }
+    	                } else {
+    	                    _json(['code'=>200,'msg'=>'启动kafka成功'],1);
+    	                }
+ 
+    	            } else {
+    	            _json(['code'=>199,'msg'=>'启动kafka失败,请检查脚本可执行权限'],1);
+    	            }
+	            } else {
+	                _json(['code'=>198,'msg'=>'kafka已启动,请勿重复启动'],1);
 	            }
-	            _json(['code'=>199,'msg'=>'启动kafka失败']);
         	    break;
 	        case 'spark':
 	            break;
