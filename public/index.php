@@ -1,5 +1,22 @@
 <?php
 /**
+ * 判断php环境是否已运行
+ */
+if ( false ) {
+    ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>错误: 没有启动PHP</title>
+</head>
+<body class="wp-core-ui">
+<p id="logo"><a href="https://wordpress.org/">量U</a></p>
+<h1>错误: 没有启动PHP</h1>
+</body>
+</html>
+<?php }
+/**
  * 解决跨域问题
  */
 header('Access-Control-Allow-Origin:*');

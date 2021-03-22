@@ -3,6 +3,9 @@ namespace App\Controllers;
 
 //use App\Models\NewsModel;
 
+use Kafka\ProducerConfig;
+use Kafka\Producer;
+
 class Receive extends BaseController
 {
     	
@@ -155,8 +158,7 @@ class Receive extends BaseController
 	 * 接收设备启动消息
 	 */
 	public function launch(){
-	    _json(array('code'=>200,'msg'=>'ok'),1);
-	    $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    /* $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();
 	    
@@ -178,7 +180,33 @@ class Receive extends BaseController
 	        $len = $rk->getOutQLen();
 	        $rk->poll(10);
 	    }
-	    echo json_encode(array('code'=>200,'msg'=>'ok'));
+	    _json(array('code'=>200,'msg'=>'ok'),1); */
+	    
+	    $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    try{
+    	    $config = ProducerConfig::getInstance();
+    	    $config->setMetadataRefreshIntervalMs(10000);
+    	    $config->setMetadataBrokerList('127.0.0.1:9092');
+    	    $config->setBrokerVersion('1.0.0');
+    	    $config->setRequiredAck(1);
+    	    $config->setIsAsyn(false);
+    	    $config->setProduceInterval(500);
+    	    $producer = new Producer();
+    	    //$producer->setLogger($logger);
+    	    
+    	    
+    	    $producer->send([
+    	            [
+    	                'topic' => 'launch',
+    	                'value' => json_encode($deviceLaunchData),
+    	                'key' => '',
+    	            ],
+    	        ]);
+    	    
+    	    _json(array('code'=>200,'msg'=>'ok'),1);
+	    } catch (\Exception $e){
+	        echo $e->getMessage();
+	    }
 	}
 	
 	/**
