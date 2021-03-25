@@ -67,4 +67,8 @@ $app = require rtrim($paths->systemDirectory, '/ ') . '/bootstrap.php';
  * Now that everything is setup, it's time to actually fire
  * up the engines and make this app do its thang.
  */
-$app->run();
+try {
+    $app->run();
+} catch(\Exception $e){
+    echo $e->getMessage();
+}
