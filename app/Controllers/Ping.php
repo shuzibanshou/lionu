@@ -23,12 +23,12 @@ class Ping extends Controller{
     
 	public function index(){
 	    echo 'ok';
-	    try{
+	    /* try{
 	    $c = file_get_contents('http://lionu.aliyun.com/ping/index');
 	    dump($c);
 	    } catch(\Exception $e){
 	        echo $e->getMessage();
-	    }
+	    } */
 	}
 
 	//--------------------------------------------------------------------

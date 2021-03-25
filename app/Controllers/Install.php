@@ -211,7 +211,6 @@ class Install extends Controller
      */
     public function checkConfigAndEnvVersion()
     {
-        
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
         //测试系统配置-SDK域名是否可访问 1s超时则说明域名未进行公网部署
         $sdkDomainUrl = trim($post['sdkdomain']).'/ping/index';

@@ -35,6 +35,7 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
+		$this->ifReWrite();
 		$this->ifInstall();
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
@@ -42,7 +43,23 @@ class BaseController extends Controller
 		// E.g.:
 		// $this->session = \Config\Services::session();
 	}
+	
+	/**
+	 * 检测webServer Rewrite功能是否可用
+	 */
+	private function ifReWrite(){
+	    $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+	    $url = $protocol.$_SERVER['HTTP_HOST'].'/ping/index';
+	    $header_info = get_headers($url);
+	    if(stripos($header_info[0],'404') !== false){
+	        echo '请检查Web Server的ReWrite模块是否已安装并加载，如果是Apache，请检查<Directory "/var/www/html">配置节点的AllowOverride配置项是否设置为All';
+	        exit;
+	    }
+	}
 
+	/**
+	 * 检测是否已安装
+	 */
 	private function ifInstall(){
 		if(!file_exists(ROOTPATH.'installed')){
 		    header('Location:/install/index');
