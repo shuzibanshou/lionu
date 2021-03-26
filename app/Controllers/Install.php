@@ -255,7 +255,7 @@ class Install extends Controller
             $db = \Config\Database::connect($custom);
             $db->connect();
             $this->checkMySQLEnv($db);
-            $db->setDatabase($dbname);
+            
         } catch (\Exception $e) {
             $error = $e->getMessage();
             //var_dump($error);
@@ -269,18 +269,24 @@ class Install extends Controller
                     'code' => 101,
                     'msg' => $error
                 ]));
-            } elseif (stripos($error, 'Unknown database') !== false) {
-                //配置写入完成 创建installed文件
-              file_put_contents(ROOTPATH . 'installed', 2);
-              _json(['code' => 200,'msg' => 'ok'],1);
+            } elseif (stripos($error, 'Connection refused') !== false) {
+                _json(['code' => 102,'msg' => $error],1);
             } elseif(stripos($error, 'mysql_compat') !== false){
                 _json(['code' => 103,'msg' => $error],1);
             }
         }
-        _json([
-            'code' => 102,
-            'msg' => 'database ' . $dbname . ' does exists'
-        ],1);
+        
+        //$db->setDatabase($dbname);
+        $dbs = $db->query("show databases")->getResultArray();
+        if(is_array($dbs) && count($dbs) > 0){
+            $dbs = array_column($dbs,'Database');
+        }
+        if(in_array($dbname,$dbs)){
+            _json(['code' => 105,'msg' => 'database ' . $dbname . ' does exists'],1);
+        }
+        //配置写入完成 创建installed文件
+        file_put_contents(ROOTPATH . 'installed', 2);
+        _json(['code' => 200,'msg' => 'ok']);
     }
     
     /**
