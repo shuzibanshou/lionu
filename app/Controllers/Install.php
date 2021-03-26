@@ -50,7 +50,10 @@ class Install extends Controller
     public function index()
     {
         $step = $this->request->getVar('step', FILTER_SANITIZE_MAGIC_QUOTES);
-        $step = intval($step) > 1 ? intval($step) : 1;
+        $step = intval($step);
+        if($step < 1){
+            header('Location:/install/index?step=1');
+        }
         $this->checkInstall($step);
         $this->checkPHPEnv();
         switch ($step) {
