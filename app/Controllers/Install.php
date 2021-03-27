@@ -85,8 +85,10 @@ class Install extends Controller
                            }
                        }
                     $const_config_strings = implode('', $const_config_strings);
-                    file_put_contents($const_config_file_path, $const_config_strings);
-                     
+                    $write_res = @file_put_contents($const_config_file_path, $const_config_strings);
+                    if(!$write_res){
+                        _json(['code' => 106,'msg' => '写入配置失败，请检查文件'.$const_config_file_path.'写入权限'],1);
+                    }
                         //记录数据库配置
                     $hostname = trim($post['dbhost']);
                     $username = trim($post['dbuser']);
@@ -285,8 +287,13 @@ class Install extends Controller
             _json(['code' => 105,'msg' => 'database ' . $dbname . ' does exists'],1);
         }
         //配置写入完成 创建installed文件
-        file_put_contents(ROOTPATH . 'installed', 2);
-        _json(['code' => 200,'msg' => 'ok']);
+        //@是有必要的 否则因为权限无法写入会抛出警告而无法获取写入结果的值
+        $write_res = @file_put_contents(ROOTPATH . 'installed', 2);
+        if($write_res){
+            _json(['code' => 200,'msg' => 'ok']);
+        } else {
+            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录'.ROOTPATH.'写入权限']);
+        }
     }
     
     /**

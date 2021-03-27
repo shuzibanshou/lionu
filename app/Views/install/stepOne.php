@@ -16,15 +16,15 @@
 </head>
 <body>
 
-<p id="logo"><a href="">lion-u</a></p>
+<p id="logo"><a href="https://www.lion-u.com/">lion-u</a></p>
+<p id="title">用数据挖掘您的广告价值</p>
 <form method="post" action="/install/index?step=2" name="config">
-<p>量U广告归因——用数据挖掘您的广告价值</p>
 <h2>系统信息</h2>
 	<table class="form-table" role="presentation">
 		<tr>
 			<th scope="row"><label for="sysuser">SDK上报域名</label></th>
 			<td><input class="conf" name="sdkdomain" id="sdkdomain" type="text" aria-describedby="sdkdomain-desc" size="25" value="" required placeholder="请填写一个公网解析的域名"/>
-			<p>该域名webserver的虚拟目录也指向量U归因系统</p>
+			<p>该域名的虚拟目录与量U系统相同</p>
 			</td>
 			<td id="sdkdomain-desc"></td>
 		</tr>
@@ -39,7 +39,7 @@
 		<tr>
 			<th scope="row"><label for="syspwd">登录密码</label></th>
 			<td><input class="conf" name="syspwd" id="syspwd" type="text" aria-describedby="syspwd-desc" size="25" value="" required/>
-			<p>请牢记您的密码，虽然之后可以修改密码，但是好记性总是一件不错的事情</p>
+			<p>请牢记您的密码</p>
 			</td>
 			<td id="syspwd-desc"></td>
 		</tr>
