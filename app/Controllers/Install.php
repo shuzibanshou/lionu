@@ -28,7 +28,8 @@ class Install extends Controller
 
     public function init()
     {
-        if (file_exists(ROOTPATH . 'installed')) {
+        $install_file_content = trim(file_get_contents(ROOTPATH . 'installed'));
+        if ($install_file_content === 'ok') {
             _json(['code' => 200,'msg' => 'ok','data' => ['installed' => 1]]);
         } else {
             _json(['code' => 200,'msg' => 'ok','data' => ['installed' => 0]]);
