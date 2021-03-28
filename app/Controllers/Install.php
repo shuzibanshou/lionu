@@ -127,11 +127,14 @@ class Install extends Controller
                     //记录系统配置和管理员信息
                     $db_config_file_path = APPPATH . '/Config/Database.php';
                     $db_config_strings = file($db_config_file_path);
-                    file_put_contents(ROOTPATH . 'installed', 3);
+                    file_put_contents(ROOTPATH . 'installed', 2);
                 }
                 echo view('install/stepTwo');
                 break;
             case 3:
+                $db_config_file_path = APPPATH . '/Config/Database.php';
+                $db_config_strings = file($db_config_file_path);
+                file_put_contents(ROOTPATH . 'installed', 3);
                 echo view('install/stepThree');
                 break;
             default:
@@ -278,12 +281,12 @@ class Install extends Controller
         }
         //配置写入完成 创建installed文件
         //@是有必要的 否则因为权限无法写入会抛出警告而无法获取写入结果的值
-        $write_res = @file_put_contents(ROOTPATH . 'installed', 2);
+        /* $write_res = @file_put_contents(ROOTPATH . 'installed', 2);
         if($write_res){
             _json(['code' => 200,'msg' => 'ok']);
         } else {
             _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录'.ROOTPATH.'写入权限']);
-        }
+        } */
     }
     
     /**
