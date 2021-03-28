@@ -154,8 +154,16 @@ class Install extends Controller
         $install_file = ROOTPATH . 'installed';
         $db_config_file = APPPATH . '/Config/Database.php';
         $const_config_file = APPPATH . '/Config/Constants.php';
-        if(is_writable($install_file)){
-            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录'.ROOTPATH.'下installed文件的写入权限1111']);
+        if(!is_writable($install_file)){
+            //需要修改visudo配置才能使用sudo提权  ，针对apache和nginx分别有不同的配置方式
+            exec('sudo chmod 0766 '.$install_file, $chmod_install_result, $chmod_install_status);
+            //chmod($install_file, 0777);
+        }
+        if(!is_writable($db_config_file)){
+            exec('sudo chmod 0766 '.$db_config_file, $chmod_db_result, $chmod_db_status);
+        }
+        if(!is_writable($const_config_file)){
+            exec('sudo chmod 0766 '.$const_config_file, $chmod_const_result, $chmod_const_status);
         }
     }
 
