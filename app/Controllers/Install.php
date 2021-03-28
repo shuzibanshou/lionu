@@ -148,7 +148,7 @@ class Install extends Controller
     {
         $install_file_name = ROOTPATH . 'installed';
         $install_file_content = file_get_contents($install_file_name);
-        if (!empty($install_file_name)) {
+        if (!empty($install_file_content)) {
             if($install_file_content == 'ok'){
                 echo '您已经完成了安装，若您需要重新安装，请先删除根目录下的installed文件和数据库表';
                 exit();
