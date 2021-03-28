@@ -10,6 +10,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use Amp\PrivatePlaceholder;
 
 class Install extends Controller
 {
@@ -44,6 +45,7 @@ class Install extends Controller
             header('Location:/install/index?step=1');
             exit;
         }
+        $this->checkPermission();
         $this->checkInstall($step);
         $this->checkPHPEnv();
         switch ($step) {
@@ -143,6 +145,19 @@ class Install extends Controller
                 break;
         }
     }
+    
+    /**
+     * 检查各配置文件的写入权限
+     * 并使用sudo提升到0777权限
+     */
+    private function checkPermission(){
+        $install_file = ROOTPATH . 'installed';
+        $db_config_file = APPPATH . '/Config/Database.php';
+        $const_config_file = APPPATH . '/Config/Constants.php';
+        if(is_writable($install_file)){
+            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录'.ROOTPATH.'下installed文件的写入权限1111']);
+        }
+    }
 
     /**
      * 检查量U系统是否已安装
@@ -171,6 +186,7 @@ class Install extends Controller
                }
           }
     }
+    
 
     /**
      * 检查php环境
@@ -286,7 +302,7 @@ class Install extends Controller
         if($write_res){
             _json(['code' => 200,'msg' => 'ok']);
         } else {
-            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录'.ROOTPATH.'下 installed文件的写入权限']);
+            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录'.ROOTPATH.'下installed文件的写入权限']);
         }
     }
     
