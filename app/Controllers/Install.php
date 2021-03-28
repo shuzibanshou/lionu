@@ -29,21 +29,9 @@ class Install extends Controller
     public function init()
     {
         if (file_exists(ROOTPATH . 'installed')) {
-            echo json_encode([
-                'code' => 200,
-                'msg' => 'ok',
-                'data' => [
-                    'installed' => 1
-                ]
-            ]);
+            _json(['code' => 200,'msg' => 'ok','data' => ['installed' => 1]]);
         } else {
-            echo json_encode([
-                'code' => 200,
-                'msg' => 'ok',
-                'data' => [
-                    'installed' => 0
-                ]
-            ]);
+            _json(['code' => 200,'msg' => 'ok','data' => ['installed' => 0]]);
         }
     }
 
@@ -53,6 +41,7 @@ class Install extends Controller
         $step = intval($step);
         if($step < 1){
             header('Location:/install/index?step=1');
+            exit;
         }
         $this->checkInstall($step);
         $this->checkPHPEnv();
@@ -63,8 +52,8 @@ class Install extends Controller
             case 2:
                 $post = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
                 if (isset($post) && ! empty($post)) {
-                        //记录系统配置和管理员信息
-                        $s_conf = ['SDKDOMAIN','SYSUSER','SYSPWD'];
+                    //记录系统配置和管理员信息
+                    $s_conf = ['SDKDOMAIN','SYSUSER','SYSPWD'];
                     $sdkdomain = trim($post['sdkdomain']);
                     $sysuser = trim($post['sysuser']);
                     $syspwd = md5(trim($post['syspwd']));
@@ -87,9 +76,9 @@ class Install extends Controller
                     $const_config_strings = implode('', $const_config_strings);
                     $write_res = @file_put_contents($const_config_file_path, $const_config_strings);
                     if(!$write_res){
-                        _json(['code' => 106,'msg' => '写入配置失败，请检查文件'.$const_config_file_path.'写入权限'],1);
+                        exit('写入配置失败，请检查文件'.$const_config_file_path.'写入权限');
                     }
-                        //记录数据库配置
+                    //记录数据库配置
                     $hostname = trim($post['dbhost']);
                     $username = trim($post['dbuser']);
                     $password = trim($post['dbpwd']);
@@ -137,7 +126,7 @@ class Install extends Controller
                     //记录系统配置和管理员信息
                     $db_config_file_path = APPPATH . '/Config/Database.php';
                     $db_config_strings = file($db_config_file_path);
-                 file_put_contents(ROOTPATH . 'installed', 3);
+                    file_put_contents(ROOTPATH . 'installed', 3);
                 }
                 echo view('install/stepTwo');
                 break;
@@ -157,8 +146,8 @@ class Install extends Controller
     private function checkInstall($step)
     {
         $install_file_name = ROOTPATH . 'installed';
-        if (file_exists($install_file_name)) {
-            $install_file_content = file_get_contents($install_file_name);
+        $install_file_content = file_get_contents($install_file_name);
+        if (!empty($install_file_name)) {
             if($install_file_content == 'ok'){
                 echo '您已经完成了安装，若您需要重新安装，请先删除根目录下的installed文件和数据库表';
                 exit();
