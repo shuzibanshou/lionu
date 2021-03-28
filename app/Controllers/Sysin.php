@@ -155,6 +155,7 @@ class Sysin extends NeedloginController
 	            }
         	    break;
 	        case 'spark':
+	            
 	            break;
         	default:
         	    _json(['code'=>198,'msg'=>'参数错误']);

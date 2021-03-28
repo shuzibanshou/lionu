@@ -11,9 +11,9 @@ class Cache extends BaseConfig
 	|
 	| The name of the preferred handler that should be used. If for some reason
 	| it is not available, the $backupHandler will be used in its place.
-	|
+	| 2021-03-28 只作为接口框架使用 故不需要使用文件缓存 将首要缓存控制器由文件改为dummy
 	*/
-	public $handler = 'file';
+	public $handler = 'dummy';
 
 	/*
 	|--------------------------------------------------------------------------
