@@ -155,7 +155,7 @@ class Install extends Controller
         $db_config_file = APPPATH . 'Config/Database.php';
         $const_config_file = APPPATH . 'Config/Constants.php';
         
-        $style = '<style>.code{color:#8aa6c1;background-color:#222;padding:10px;border-radius:5px;min-width:800px;}
+        $style = '<style>.code{color:#8aa6c1;background-color:#222;padding:10px;border-radius:5px;width:800px;}
                          .btn{margin-left:40px;background-color:#05c;color:#fff;background-image:-webkit-linear-gradient(top,#0088cc,#0055cc);border:0;padding:5px 10px;border-radius:5px;}</style>';
         $tips = '';
         if(!is_writable($install_file)){
