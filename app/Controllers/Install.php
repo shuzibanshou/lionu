@@ -182,7 +182,7 @@ class Install extends Controller
                       </li>';
         }
         if(!empty($tips)){
-            $html = $style.'<ul>'.$tips.'</ul><button class="btn">修改后刷新</button>';
+            $html = $style.'<ul>'.$tips.'</ul><button class="btn" onclick="javascript:window.location.reload()">修改后刷新</button>';
             exit($html);
         }
     }
