@@ -154,16 +154,35 @@ class Install extends Controller
         $install_file = ROOTPATH . 'installed';
         $db_config_file = APPPATH . '/Config/Database.php';
         $const_config_file = APPPATH . '/Config/Constants.php';
+        
+        $style = '';
+        $tips = '';
         if(!is_writable($install_file)){
             //需要修改visudo配置才能使用sudo提权  ，针对apache和nginx分别有不同的配置方式
-            exec('sudo chmod 0766 '.$install_file, $chmod_install_result, $chmod_install_status);
+            //exec('sudo chmod 0766 '.$install_file, $chmod_install_result, $chmod_install_status);
             //chmod($install_file, 0777);
+            $tips .= '<li>
+                        <p>安装配置文件不可写，请在root权限下使用下列命令修改权限</p>
+                        <p class="code">#chmod 0766 '.$install_file.'</p>
+                      </li>';
         }
         if(!is_writable($db_config_file)){
-            exec('sudo chmod 0766 '.$db_config_file, $chmod_db_result, $chmod_db_status);
+            //exec('sudo chmod 0766 '.$db_config_file, $chmod_db_result, $chmod_db_status);
+            $tips .= '<li>
+                        <p>数据配置文件不可写，请在root权限下使用下列命令修改权限</p>
+                        <p class="code">#chmod 0766 '.$db_config_file.'</p>
+                      </li>';
         }
         if(!is_writable($const_config_file)){
-            exec('sudo chmod 0766 '.$const_config_file, $chmod_const_result, $chmod_const_status);
+            //exec('sudo chmod 0766 '.$const_config_file, $chmod_const_result, $chmod_const_status);
+            $tips .= '<li>
+                        <p>数据配置文件不可写，请在root权限下使用下列命令修改权限</p>
+                        <p class="code">#chmod 0766 '.$const_config_file.'</p>
+                      </li>';
+        }
+        if(!empty($tips)){
+            $html = $style.'<ul>'.$tips.'</ul>';
+            exit($html);
         }
     }
 
