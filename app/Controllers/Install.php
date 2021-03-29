@@ -152,10 +152,11 @@ class Install extends Controller
      */
     private function checkPermission(){
         $install_file = ROOTPATH . 'installed';
-        $db_config_file = APPPATH . '/Config/Database.php';
-        $const_config_file = APPPATH . '/Config/Constants.php';
+        $db_config_file = APPPATH . 'Config/Database.php';
+        $const_config_file = APPPATH . 'Config/Constants.php';
         
-        $style = '<style>.code{color:#8aa6c1;background-color:#222;padding:10px;border-radius:5px;width:800px;}</style>';
+        $style = '<style>.code{color:#8aa6c1;background-color:#222;padding:10px;border-radius:5px;min-width:800px;}
+                         .btn{margin-left:40px;background-color:#05c;color:#fff;background-image:-webkit-linear-gradient(top,#0088cc,#0055cc);border:0;padding:5px 10px;border-radius:5px;}</style>';
         $tips = '';
         if(!is_writable($install_file)){
             //需要修改visudo配置才能使用sudo提权  ，针对apache和nginx分别有不同的配置方式
@@ -181,7 +182,7 @@ class Install extends Controller
                       </li>';
         }
         if(!empty($tips)){
-            $html = $style.'<ul>'.$tips.'</ul>';
+            $html = $style.'<ul>'.$tips.'</ul><button class="btn">修改后刷新</button>';
             exit($html);
         }
     }
