@@ -155,7 +155,7 @@ class Install extends Controller
         $db_config_file = APPPATH . '/Config/Database.php';
         $const_config_file = APPPATH . '/Config/Constants.php';
         
-        $style = '<style>.code{color:#8aa6c1;background-color:#222;padding:10px;border-radius:5px;with:800px;}</style>';
+        $style = '<style>.code{color:#8aa6c1;background-color:#222;padding:10px;border-radius:5px;width:800px;}</style>';
         $tips = '';
         if(!is_writable($install_file)){
             //需要修改visudo配置才能使用sudo提权  ，针对apache和nginx分别有不同的配置方式
