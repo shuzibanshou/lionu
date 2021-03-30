@@ -31,6 +31,8 @@ class Sysin extends NeedloginController
 	 */
 	public function kafkaAndSpark(){
 	    $data = array(
+	        'cores'=>0,
+	        'mem'=>0,
 	        'php-kafka'=>1,
 	        'zookeeper'=>0,
 	        'kafka'=>0,
@@ -41,8 +43,21 @@ class Sysin extends NeedloginController
 	    $check_cpu_cores_shell = "grep 'core id' /proc/cpuinfo | sort -u | wc -l";//单个CPU核数
 	    exec($check_cpus_shell,$check_cpus_result,$check_cpus_status);
 	    exec($check_cpu_cores_shell,$check_cpu_cores_result,$check_cpu_cores_status);
-	    print_r($check_cpus_result);
-	    print_r($check_cpu_cores_result);
+	    
+	    if(!$check_cpus_status && !$check_cpu_cores_status){
+	        if(is_array($check_cpus_result) && is_array($check_cpu_cores_result)){
+	            $data['cores'] = $check_cpus_result[0] * $check_cpu_cores_result[0];
+	        }
+	    }
+	    $check_mem_shell = "cat /proc/meminfo | grep MemTotal";
+	    exec($check_mem_shell,$check_mem_result,$check_mem_status);
+	    dump($check_mem_result);
+	    exit;
+	    if(!$check_mem_status){
+	        if(is_array($check_mem_result) && count($check_mem_result) > 0){
+	            $data['mem'] = $check_mem_result[0];
+	        }
+	    }
 	    //检测php-kafka扩展安装情况
 	    
 	    
