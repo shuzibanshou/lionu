@@ -361,7 +361,7 @@ class Install extends Controller
            if(is_array($queries) && count($queries) > 0){
                 foreach ( $queries as $query ) {
                     $res = $db->query( $query );
-		       //TODO 验证SQL执行结果
+		             //TODO 验证SQL执行结果
                     preg_match('/`(.*)`\s*\(/U', $query, $matches);//U修饰符限制贪婪
                       $temp = [];
                       $temp['tableName'] = $matches[1];

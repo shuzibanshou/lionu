@@ -31,10 +31,21 @@ class Sysin extends NeedloginController
 	 */
 	public function kafkaAndSpark(){
 	    $data = array(
+	        'php-kafka'=>1,
 	        'zookeeper'=>0,
 	        'kafka'=>0,
 	        'spark'=>0
 	    );
+	    //检测CPU核数和内存大小
+	    $check_cpus_shell = "grep 'physical id' /proc/cpuinfo | sort -u | wc -l";//物理CPU个数
+	    $check_cpu_cores_shell = "grep 'core id' /proc/cpuinfo | sort -u | wc -l";//单个CPU核数
+	    exec($check_cpus_shell,$check_cpus_result,$check_cpus_status);
+	    exec($check_cpu_cores_shell,$check_cpu_cores_result,$check_cpu_cores_status);
+	    echo $check_cpus_result;
+	    echo $check_cpu_cores_result;
+	    //检测php-kafka扩展安装情况
+	    
+	    
 	    //监测zookeeper运行情况 zookeeper默认2181端口
 	    $check_zookeeper_shell = "netstat -tnlp | grep 2181";
 	    exec($check_zookeeper_shell, $check_zookeeper_result, $check_zookeeper_status);
@@ -70,6 +81,8 @@ class Sysin extends NeedloginController
 	    $post = $this->request->getPost(null,FILTER_SANITIZE_MAGIC_QUOTES);
 	    $soft = $post['soft'];
 	    switch ($soft){
+	        case 'php-kafka':
+	            break;
 	        case 'zookeeper':
 	            //根据端口检查服务是否启动
 	            exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
