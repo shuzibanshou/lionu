@@ -51,11 +51,11 @@ class Sysin extends NeedloginController
 	    }
 	    $check_mem_shell = "cat /proc/meminfo | grep MemTotal";
 	    exec($check_mem_shell,$check_mem_result,$check_mem_status);
-	    dump($check_mem_result);
-	    exit;
 	    if(!$check_mem_status){
 	        if(is_array($check_mem_result) && count($check_mem_result) > 0){
-	            $data['mem'] = $check_mem_result[0];
+	            $_mem_ = explode(':', $check_mem_result[0]);
+	            $_mem = intval(trim(str_replace('kB', '', $_mem_[1])) / 1024 /1024);   //GB
+	            $data['mem'] = $_mem;
 	        }
 	    }
 	    //检测php-kafka扩展安装情况
