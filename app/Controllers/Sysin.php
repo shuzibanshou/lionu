@@ -54,7 +54,7 @@ class Sysin extends NeedloginController
 	    if(!$check_mem_status){
 	        if(is_array($check_mem_result) && count($check_mem_result) > 0){
 	            $_mem_ = explode(':', $check_mem_result[0]);
-	            $_mem = intval(trim(str_replace('kB', '', $_mem_[1])) / 1024 /1024);   //GB
+	            $_mem = intval(trim(str_replace('kB', '', $_mem_[1])) / 1000 /1000);   //GB
 	            $data['mem'] = $_mem;
 	        }
 	    }
