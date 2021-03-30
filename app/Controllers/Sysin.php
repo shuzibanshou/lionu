@@ -41,8 +41,8 @@ class Sysin extends NeedloginController
 	    $check_cpu_cores_shell = "grep 'core id' /proc/cpuinfo | sort -u | wc -l";//单个CPU核数
 	    exec($check_cpus_shell,$check_cpus_result,$check_cpus_status);
 	    exec($check_cpu_cores_shell,$check_cpu_cores_result,$check_cpu_cores_status);
-	    echo $check_cpus_result;
-	    echo $check_cpu_cores_result;
+	    print_r($check_cpus_result);
+	    print_r($check_cpu_cores_result);
 	    //检测php-kafka扩展安装情况
 	    
 	    
