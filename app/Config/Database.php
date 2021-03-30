@@ -1,5 +1,11 @@
 <?php namespace Config;
 
+define( 'hostname', '' );
+define( 'username', '' );
+define( 'password', '' );
+define( 'database', '' );
+define( 'port', '' );
+
 /**
  * Database Configuration
  *
@@ -31,10 +37,10 @@ class Database extends \CodeIgniter\Database\Config
 	 */
 	public $default = [
 		'DSN'      => '',
-		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => '',
-		'database' => 'test',
+		'hostname' => hostname,
+		'username' => username,
+		'password' => password,
+		'database' => database,
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -48,7 +54,7 @@ class Database extends \CodeIgniter\Database\Config
 		'compress' => false,
 		'strictOn' => false,
 		'failover' => [],
-		'port'     => 3306,
+		'port'     => port,
 	];
 
 	/**

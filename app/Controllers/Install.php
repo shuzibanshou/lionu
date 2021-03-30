@@ -131,8 +131,6 @@ class Install extends Controller
                         echo $e->getMessage();
                     }
                     //记录系统配置和管理员信息
-                    $db_config_file_path = APPPATH . '/Config/Database.php';
-                    $db_config_strings = file($db_config_file_path);
                     file_put_contents(ROOTPATH . 'installed', 3);
                 }
                 echo view('install/stepTwo');
@@ -363,6 +361,7 @@ class Install extends Controller
            if(is_array($queries) && count($queries) > 0){
                 foreach ( $queries as $query ) {
                     $res = $db->query( $query );
+		       //TODO 验证SQL执行结果
                     preg_match('/`(.*)`\s*\(/U', $query, $matches);//U修饰符限制贪婪
                       $temp = [];
                       $temp['tableName'] = $matches[1];
