@@ -177,7 +177,7 @@ class Install extends Controller
         if(!is_writable($const_config_file)){
             //exec('sudo chmod 0766 '.$const_config_file, $chmod_const_result, $chmod_const_status);
             $tips .= '<li>
-                        <p>数据配置文件不可写，请在root权限下使用下列命令修改权限</p>
+                        <p>常量配置文件不可写，请在root权限下使用下列命令修改权限</p>
                         <p class="code"> chmod 0766 '.$const_config_file.'</p>
                       </li>';
         }
