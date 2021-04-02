@@ -100,7 +100,7 @@ label {
 }
 
 .step {
-	margin: 20px 0 15px
+	margin: 20px 145px 15px
 }
 
 .step,th {
@@ -129,7 +129,7 @@ textarea {
 	margin-bottom: 9px;
 	padding: 10px 20px 10px 0;
 	font-size: 14px;
-	vertical-align: top
+	/*! vertical-align: middle; */
 }
 
 .form-table th {
@@ -158,7 +158,6 @@ textarea {
 	border: 1px solid #ddd;
 	box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
 	float: left;
-	margin-bottom: 8px;
 }
 
 input,submit {
