@@ -25,7 +25,7 @@
         <table class="form-table" role="presentation">
             <tr>
                 <th scope="row"><label for="sysuser">SDK上报域名</label></th>
-                <td><input class="conf required" name="sdkdomain" id="sdkdomain" type="text"  size="25"   placeholder="请填写一个公网解析的域名" data-valid="isNonEmpty" data-error="<i class='icon-tips'></i>域名不能为空||<i class='icon-tips'></i>请填写6位手机动态码"/><label class="focus valid"></label>
+                <td><input class="conf required" name="sdkdomain" id="sdkdomain" type="text"  size="25" placeholder="请填写一个公网解析的域名" data-valid="isNonEmpty||isDomain" data-error="<i class='icon-tips'></i>域名不能为空||<i class='icon-tips'></i>请填写正确格式的域名"/><label class="focus valid"></label>
                 <p>该域名的虚拟目录与量U系统相同</p>
                 </td>
                 <td id="sdkdomain-desc"></td>
@@ -34,19 +34,21 @@
         <h2>管理员信息</h2>
         <table class="form-table" role="presentation">
             <tr>
-                <th scope="row"><label for="sysuser">登录用户名</label></th>
-                <td><input class="conf" name="sysuser" id="sysuser" type="text" aria-describedby="sysuser-desc" size="25" value="admin" required /></td>
+                <th scope="row"><label for="sysuser">登录用户</label></th>
+                <td><input class="conf required" name="sysuser" id="sysuser" type="text" size="25" value="admin" data-valid="isNonEmpty||between:4-10||isAdmin" data-error="<i class='icon-tips'></i>您还没有输入用户名||<i class='icon-tips'></i>用户名长度4-10位||<i class='icon-tips'></i>只能输入字母、数字"  /><label class="focus valid"></label>
+		    </td>
                 <td id="sysuser-desc"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="syspwd">登录密码</label></th>
-                <td><input class="conf" name="syspwd" id="syspwd" type="text" aria-describedby="syspwd-desc" size="25" value="" required placeholder="请牢记您的密码"/>
+                <td><input class="conf required" name="syspwd" id="syspwd" type="text" size="25" placeholder="请牢记您的密码" data-valid="isNonEmpty||between:6-20||isPwd" data-error="<i class='icon-tips'></i>您还没有输入密码||<i class='icon-tips'></i>密码长度6-20位||<i class='icon-tips'></i>只能输入字母、数字"  /><label class="focus valid"></label>
                 </td>
                 <td id="syspwd-desc"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="sysrepwd">确认密码</label></th>
-                <td><input name="sysrepwd" id="sysrepwd" type="text" aria-describedby="sysrepwd-desc" size="25" value="" autocomplete="off" required /></td>
+                <td><input class="conf required" name="sysrepwd" id="sysrepwd" type="text" size="25" data-valid="isNonEmpty||between:6-20||isPwd||isRepeat:syspwd" data-error="<i class='icon-tips'></i>您还没有输入密码||<i class='icon-tips'></i>密码长度6-20位||<i class='icon-tips'></i>只能输入字母、数字||<i class='icon-tips'></i>重复密码不一致" /><label class="focus valid"></label>
+			</td>
                 <td id="sysrepwd-desc"></td>
             </tr>
         </table>
@@ -54,20 +56,22 @@
         <table class="form-table" role="presentation">
             <tr>
                 <th scope="row"><label for="dbhost">数据库地址</label></th>
-                <td><input class="dbconf conf" name="dbhost" id="dbhost" type="text" aria-describedby="dbhost-desc" size="25" value="127.0.0.1" required/>
+                <td><input class="dbconf conf required" name="dbhost" id="dbhost" type="text" size="25" value="127.0.0.1" data-valid="isNonEmpty||isIP" data-error="<i class='icon-tips'></i>您还没有输入数据库地址||<i class='icon-tips'></i>请输入合法的IP地址" /><label class="focus valid"></label>
                 <p>在使用PDO连接本地MySQL服务时,使用127.0.0.1比localhost有更好的兼容性</p>
                 </td>
                 <td id="dbhost-desc"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="dbname">数据库名</label></th>
-                <td><input class="dbconf conf" name="dbname" id="dbname" type="text" aria-describedby="dbname-desc" size="25" value="lion-u" required/></td>
+                <td><input class="dbconf conf required" name="dbname" id="dbname" type="text" size="25" value="lion-u" data-valid="isNonEmpty||between:1-50" data-error="<i class='icon-tips'></i>您还没有输入数据库名||<i class='icon-tips'></i>请输入合适的长度" />
+				<label class="focus valid"></label>
+			</td>
                 <td id="dbname-desc"></td>
             </tr>
     
             <tr>
                 <th scope="row"><label for="dbuser">数据库用户名</label></th>
-                <td><input class="dbconf conf" name="dbuser" id="dbuser" type="text" aria-describedby="dbuser-desc" size="25" value="root" required/></td>
+                <td><input class="dbconf conf required" name="dbuser" id="dbuser" type="text" size="25" value="root" data-valid="isNonEmpty||between:1-50" data-error="<i class='icon-tips'></i>您还没有输入数据库名||<i class='icon-tips'></i>请输入合适的长度" /><label class="focus valid"></label></td>
                 <td id="dbuser-desc"></td>
             </tr>
             <tr>
@@ -77,11 +81,11 @@
             </tr>
             <tr>
                 <th scope="row"><label for="dbport">数据库端口</label></th>
-                <td><input class="dbconf conf" name="dbport" id="dbport" type="text" aria-describedby="dbport-desc" size="25" value="3306" autocomplete="off" required/></td>
+                <td><input class="dbconf conf required" name="dbport" id="dbport" type="text" size="25" value="3306" autocomplete="off" data-valid="isNonEmpty||isPort" data-error="<i class='icon-tips'></i>您还没有输入数据库端口||<i class='icon-tips'></i>请输入合适的端口号" /><label class="focus valid"></label></td>
                 <td id="dbport-desc"></td>
             </tr>
         </table>
-        <h2>Kafka信息(可安装完成后再部署)</h2>
+        <!-- <h2>Kafka信息(可安装完成后再部署)</h2>
         <table class="form-table" role="presentation">
             <tr>
                 <th scope="row"><label for="kafkahost">kafka地址</label></th>
@@ -96,7 +100,7 @@
                 <td><input class="kafkaconf conf" name="kafkaport" id="kafkaport" type="text" aria-describedby="kafkaport-desc" size="25" value="9092" autocomplete="off" required/></td>
                 <td id="kafkaport-desc"></td>
             </tr>
-        </table>
+        </table> -->
             <?php
             if ( isset( $_GET['noapi'] ) ) {
                 ?>
@@ -116,8 +120,11 @@
 	
 	$(document).ready(function(){
 		$("form[name='config']").submit(function(){
+			if (!verifyCheck._click()){
+				return false;
+			}
 			//检查登录用户名
-			var sysuser = $.trim($("#sysuser").val())
+			/*var sysuser = $.trim($("#sysuser").val())
 			if(/^[a-zA-Z]{5,10}$/.test(sysuser) == false){
 				$("#sysuser").addClass('error')
 				alert('管理员用户名必须为5-10位的英文字符')
@@ -142,7 +149,7 @@
     			}
 			}
 			//TODO 密码强度认证  显示隐藏
-			var dbconf = $(".conf").serialize();
+			var dbconf = $(".conf").serialize();*/
 
 			var pass = true;
 			$.ajax({

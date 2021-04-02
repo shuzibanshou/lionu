@@ -7,9 +7,12 @@
     };
     function require(f) {
         var g = {
-            admin: /^[a-zA-Z0-9]{6,10}$/,
-            pwd: /^[a-zA-Z0-9]{6,10}$/,
+            admin: /^[a-zA-Z0-9]{4,10}$/,
+            pwd: /^[a-zA-Z0-9]{6,20}$/,
+	      domain:/^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*$/,
+		ip:/^(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)$/,
             int: /^[0-9]*$/,
+		port: /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
             s: ''
         };
         this.rules = {
@@ -45,9 +48,25 @@
                 b = b || " ";
                 if (!g.int.test(a)) return b
             },
-            isUname: function(a, b) {
+            isAdmin: function(a, b) {
                 b = b || " ";
-                if (!g.uname.test(a)) return b
+                if (!g.admin.test(a)) return b
+            },
+		isDomain: function(a, b) {
+                b = b || " ";
+                if (!g.domain.test(a)) return b
+            },
+		isIP: function(a, b) {
+                b = b || " ";
+                if (!g.ip.test(a)) return b
+            },
+ 		isPwd: function(a, b) {
+                b = b || " ";
+                if (!g.pwd.test(a)) return b
+            },
+		isPort: function(a, b) {
+                b = b || " ";
+                if (!g.port.test(a)) return b
             },
             isChecked: function(c, d, e) {
                 d = d || " ";
@@ -67,14 +86,10 @@
             $('body').on({
                 blur: function(a) {
                     d.formValidator($(this));
-                    if (b.phone && $(this).attr("id") === "phone") d._change($(this));
                     b.onBlur ? b.onBlur($(this)) : ''
                 },
                 focus: function(a) {
                     b.onFocus ? b.onFocus($(this)) : $(this).parent().find("label.focus").not(".valid").removeClass("hide").siblings(".valid").addClass("hide") && $(this).parent().find(".blank").addClass("hide") && $(this).parent().find(".close").addClass("hide")
-                },
-                keyup: function(a) {
-                    if (b.phone && $(this).attr("id") === "phone") d._change($(this))
                 },
                 change: function(a) {
                     b.onChange ? b.onChange($(this)) : ''
@@ -159,7 +174,6 @@
         } else {
             a.parent().find(".blank").removeClass("hide")
         }
-		console.log(o)
         o.text("").append(c)
     };
     j.textChineseLength = function(a) {
@@ -267,19 +281,4 @@
 $(function() {
     togglePwd();
     verifyCheck();
-    $('body').on("keyup", "#password",
-    function() {
-        var t = $(this).val(),
-        o = $(this).parent().find(".strength");
-        if (t.length >= 6) {
-            o.show();
-            var l = verifyCheck.pwdStrong(t);
-            o.find("b i").removeClass("on");
-            for (var i = 0; i < l; i++) {
-                o.find("b i").eq(i).addClass("on")
-            }
-        } else {
-            o.hide()
-        }
-    })
 });
