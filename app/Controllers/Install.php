@@ -50,6 +50,7 @@ class Install extends Controller
         $this->checkPHPEnv();
         switch ($step) {
             case 1:
+		    file_put_contents(ROOTPATH . 'installed', 1);
                 echo view('install/stepOne');
                 break;
             case 2:
@@ -77,6 +78,7 @@ class Install extends Controller
                            }
                        }
                     $const_config_strings = implode('', $const_config_strings);
+			
                     $write_res = @file_put_contents($const_config_file_path, $const_config_strings);
                     if(!$write_res){
                         //写入失败 应清空 installed 文件的安装进度
@@ -131,7 +133,7 @@ class Install extends Controller
                         echo $e->getMessage();
                     }
                     //记录系统配置和管理员信息
-                    file_put_contents(ROOTPATH . 'installed', 3);
+                    file_put_contents(ROOTPATH . 'installed', 2);
                 }
                 echo view('install/stepTwo');
                 break;
