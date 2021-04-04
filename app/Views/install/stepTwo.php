@@ -16,11 +16,28 @@
 </head>
 <body>
 
-<p id="logo"><a href="">lion-u</a></p>
+<p id="logo"><a href="https://www.lion-u.com"></a></p>
 <form method="post" action="index?step=3" name="config">
-<p>量U广告归因——用数据挖掘您的广告价值</p>
-	<p>配置写入完成，点击开始安装</p>
+	<p class="step">量U广告归因—用数据挖掘您的广告价值</p>
+	<p class="step">配置写入完成，点击开始安装</p>
 	<p class="step"><input name="submit" type="submit" value="开始安装" class="button button-large" /></p>
 </form>
 </body>
+<script type="text/javascript">
+	$("form[name='config']").submit(function(){
+		var pass = true;
+		$.ajax({
+			'url':'/install/step3',
+			'type':'POST',
+			'dataType':'json',
+			'success':function(res){
+				if(res.code != 200){
+					alert(res.msg)
+					pass = false;
+				}
+			}
+		})
+		return pass
+	})
+</script>
 </html>

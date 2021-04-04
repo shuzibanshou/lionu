@@ -147,10 +147,9 @@
     				$("#sypwd").removeClass('error')
     				$("#syrepwd").removeClass('error')
     			}
-			}
-			//TODO 密码强度认证  显示隐藏
-			var dbconf = $(".conf").serialize();*/
+			}*/
 
+			var dbconf = $(".conf").serialize();
 			var pass = true;
 			$.ajax({
 				'url':'/install/checkConfigAndEnvVersion',

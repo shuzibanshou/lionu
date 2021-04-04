@@ -78,97 +78,105 @@ class Install extends Controller
     }
 
     /**
-     * ajax写入配置
+     * 配置写入文件
      */
-    public function stepTo2()
+    private function step2()
     {
-        $post = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
-        if (isset($post) && ! empty($post)) {
-            // 记录系统配置和管理员信息
-            $s_conf = [
-                'SDKDOMAIN',
-                'SYSUSER',
-                'SYSPWD'
-            ];
-            $sdkdomain = trim($post['sdkdomain']);
-            $sysuser = trim($post['sysuser']);
-            $syspwd = md5(trim($post['syspwd']));
-            $const_config_file_path = APPPATH . '/Config/Constants.php';
-            $const_config_strings = file($const_config_file_path);
-            foreach ($const_config_strings as $line_num => &$line) {
-                if (preg_match_all('(' . implode('|', $s_conf) . ')', $line, $matches)) {
-                    $key = $matches[0][0];
-                    $s_key = strtolower($key);
-                    $line = "defined('{$key}')      || define('{$key}', '{${$s_key}}');\r\n";
-                    $s_conf = array_diff($s_conf, [
-                        $key
-                    ]);
-                }
-            }
-            if (count($s_conf) > 0) {
-                foreach ($s_conf as $key) {
-                    $s_key = strtolower($key);
-                    $const_config_strings[] = "defined('{$key}')      || define('{$key}', '{${$s_key}}');\r\n";
-                }
-            }
-            $const_config_strings = implode('', $const_config_strings);
-            
-            $write_res = @file_put_contents($const_config_file_path, $const_config_strings);
-            if (! $write_res) {
-                // 写入失败 应清空 installed 文件的安装进度
-                @file_put_contents(ROOTPATH . 'installed', '');
-                exit('写入配置失败，请检查文件' . $const_config_file_path . '写入权限');
-            }
-            // 记录数据库配置
-            $hostname = trim($post['dbhost']);
-            $username = trim($post['dbuser']);
-            $password = trim($post['dbpwd']);
-            $database = trim($post['dbname']);
-            $port = trim($post['dbport']);
-            
-            $db_config_file_path = APPPATH . '/Config/Database.php';
-            $db_config_strings = file($db_config_file_path);
-            $key = 0;
-            foreach ($db_config_strings as $line_num => $line) {
-                if (! preg_match('/^define\(\s*\'([a-zA-Z_]+)\',([ ]+)/', $line, $match)) {
-                    continue;
-                }
-                $constant = $match[1];
-                $padding = $match[2];
-                
-                switch ($constant) {
-                    case 'hostname':
-                    case 'username':
-                    case 'password':
-                    case 'database':
-                    case 'port':
-                        // $db_config_file[$line_num] = "define( '" . $constant . "'," . $padding . "'" . addcslashes(constant($constant), "\\'") . "' );\r\n";
-                        $db_config_strings[$line_num] = "define( '" . $constant . "'," . $padding . "'" . addcslashes(${$constant}, "\\'") . "' );\r\n";
-                        break;
-                    default:
-                        break;
-                }
-            }
-            unset($line);
-            // 写回配置 判断是否可写
-            if (! is_writable($db_config_file_path)) {
-                // 写入失败 应清空 installed 文件的安装进度
-                @file_put_contents(ROOTPATH . 'installed', '');
-                exit('写入配置失败，请检查文件' . $db_config_file_path . '写入权限'); // TODO root却修改不了？
-            }
-            $handle = fopen($db_config_file_path, 'w');
-            foreach ($db_config_strings as $line) {
-                fwrite($handle, $line);
-            }
-            try {
-                fclose($handle);
-                // chmod( $db_config_file_path, 0666 );
-            } catch (\Exception $e) {
-                echo $e->getMessage();
-            }
-            // 记录系统配置和管理员信息
-            file_put_contents(ROOTPATH . 'installed', 2);
-       }
+    	$install_file_content = trim(file_get_contents(ROOTPATH . 'installed'));
+    	if($install_file_content == 1){
+    		$post = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	        if (isset($post) && ! empty($post)) {
+	            // 记录系统配置和管理员信息
+	            $s_conf = [
+	                'SDKDOMAIN',
+	                'SYSUSER',
+	                'SYSPWD'
+	            ];
+	            $sdkdomain = trim($post['sdkdomain']);
+	            $sysuser = trim($post['sysuser']);
+	            $syspwd = md5(trim($post['syspwd']));
+	            $const_config_file_path = APPPATH . '/Config/Constants.php';
+	            $const_config_strings = file($const_config_file_path);
+	            foreach ($const_config_strings as $line_num => &$line) {
+	                if (preg_match_all('(' . implode('|', $s_conf) . ')', $line, $matches)) {
+	                    $key = $matches[0][0];
+	                    $s_key = strtolower($key);
+	                    $line = "defined('{$key}')      || define('{$key}', '{${$s_key}}');\r\n";
+	                    $s_conf = array_diff($s_conf, [
+	                        $key
+	                    ]);
+	                }
+	            }
+	            if (count($s_conf) > 0) {
+	                foreach ($s_conf as $key) {
+	                    $s_key = strtolower($key);
+	                    $const_config_strings[] = "defined('{$key}')      || define('{$key}', '{${$s_key}}');\r\n";
+	                }
+	            }
+	            $const_config_strings = implode('', $const_config_strings);
+	            
+	            $write_res = @file_put_contents($const_config_file_path, $const_config_strings);
+	            if (! $write_res) {
+	                // 写入失败 应清空 installed 文件的安装进度
+	                @file_put_contents(ROOTPATH . 'installed', '');
+	                _json(['code'=>196,'msg'=>'写入配置失败，请检查文件' . $const_config_file_path . '写入权限']);
+	            }
+	            // 记录数据库配置
+	            $hostname = trim($post['dbhost']);
+	            $username = trim($post['dbuser']);
+	            $password = trim($post['dbpwd']);
+	            $database = trim($post['dbname']);
+	            $port = trim($post['dbport']);
+	            
+	            $db_config_file_path = APPPATH . '/Config/Database.php';
+	            $db_config_strings = file($db_config_file_path);
+	            $key = 0;
+	            foreach ($db_config_strings as $line_num => $line) {
+	                if (! preg_match('/^define\(\s*\'([a-zA-Z_]+)\',([ ]+)/', $line, $match)) {
+	                    continue;
+	                }
+	                $constant = $match[1];
+	                $padding = $match[2];
+	                
+	                switch ($constant) {
+	                    case 'hostname':
+	                    case 'username':
+	                    case 'password':
+	                    case 'database':
+	                    case 'port':
+	                        // $db_config_file[$line_num] = "define( '" . $constant . "'," . $padding . "'" . addcslashes(constant($constant), "\\'") . "' );\r\n";
+	                        $db_config_strings[$line_num] = "define( '" . $constant . "'," . $padding . "'" . addcslashes(${$constant}, "\\'") . "' );\r\n";
+	                        break;
+	                    default:
+	                        break;
+	                }
+	            }
+	            unset($line);
+	            // 写回配置 判断是否可写
+	            if (! is_writable($db_config_file_path)) {
+	                // 写入失败 应清空 installed 文件的安装进度
+	                @file_put_contents(ROOTPATH . 'installed', '');
+	                _json(['code'=>197,'msg'=>'写入配置失败，请检查文件' . $db_config_file_path . '写入权限']);
+	            }
+	            $handle = fopen($db_config_file_path, 'w');
+	            foreach ($db_config_strings as $line) {
+	                fwrite($handle, $line);
+	            }
+	            try {
+	                fclose($handle);
+	                // chmod( $db_config_file_path, 0666 );
+	            } catch (\Exception $e) {
+	                echo $e->getMessage();
+	            }
+	            // 记录系统配置和管理员信息
+	            file_put_contents(ROOTPATH . 'installed', 2);
+	    	} else {
+	    		_json(['code'=>198,'msg'=>'data is empty'],1);
+	    	}
+        } else {
+        	_json(['code'=>199,'msg'=>'step error'],1);
+        }
+        return true;
     }
 
 
@@ -226,7 +234,7 @@ class Install extends Controller
         $install_file_content = file_get_contents($install_file_name);
         if (! empty($install_file_content)) {
             if ($install_file_content == 'ok') {
-                echo '您已经完成了安装，若您需要重新安装，请先删除根目录下的installed文件和数据库表';
+                echo '您已经完成了安装，若您需要重新安装，请先清空根目录下installed文件的内容及删除数据库表';
                 exit();
             } else {
                 // 步骤参数与当前安装进度不符
@@ -325,27 +333,18 @@ class Install extends Controller
             $this->checkMySQLEnv($db);
         } catch (\Exception $e) {
             $error = $e->getMessage();
-            // var_dump($error);
+            $error = iconv('gb2312', 'utf-8', $error);
+
             if (stripos($error, 'timed') !== false) {
-                exit(json_encode([
-                    'code' => 100,
-                    'msg' => $error
-                ]));
+                _json(['code' => 100,'msg' => $error], 1);
             } elseif (stripos($error, 'denied') !== false) {
-                exit(json_encode([
-                    'code' => 101,
-                    'msg' => $error
-                ]));
+                _json(['code' => 101,'msg' => $error], 1);
             } elseif (stripos($error, 'Connection refused') !== false) {
-                _json([
-                    'code' => 102,
-                    'msg' => $error
-                ], 1);
+                _json(['code' => 102,'msg' => $error], 1);
             } elseif (stripos($error, 'mysql_compat') !== false) {
-                _json([
-                    'code' => 103,
-                    'msg' => $error
-                ], 1);
+                _json(['code' => 103,'msg' => $error], 1);
+            } else {
+            	_json(['code' => 105,'msg' => $error], 1);
             }
         }
         
@@ -355,24 +354,33 @@ class Install extends Controller
             $dbs = array_column($dbs, 'Database');
         }
         if (in_array($dbname, $dbs)) {
-            _json([
-                'code' => 105,
-                'msg' => 'database ' . $dbname . ' does exists'
-            ], 1);
+            _json(['code' => 105,'msg' => 'database ' . $dbname . ' does exists'], 1);
         }
-        // 配置写入完成 创建installed文件
-        // @是有必要的 否则因为权限无法写入会抛出警告而无法获取写入结果的值
-        $write_res = @file_put_contents(ROOTPATH . 'installed', 2);
-        if ($write_res) {
-            _json([
-                'code' => 200,
-                'msg' => 'ok'
-            ]);
+
+        // 环境通过检测开始写入配置
+        $write_res = $this->step2();
+        if($write_res){
+        	// 配置写入完成 创建installed文件
+        	// @是有必要的 否则因为权限无法写入会抛出警告而无法获取写入结果的值
+        	$write_res = @file_put_contents(ROOTPATH . 'installed', 2);
+        	if ($write_res) {
+	            _json(['code' => 200,'msg' => 'ok']);
+	        } else {
+	            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录' . ROOTPATH . '下installed文件的写入权限']);
+	        }
+        }
+    }
+
+    /**
+     * 修改installed文件为step3
+     * Ajax
+     */
+    public function step3(){
+    	$write_res = @file_put_contents(ROOTPATH . 'installed', 3);
+    	if ($write_res) {
+            _json(['code' => 200,'msg' => 'ok']);
         } else {
-            _json([
-                'code' => 106,
-                'msg' => '写安装文件失败，请检查站点根目录' . ROOTPATH . '下installed文件的写入权限'
-            ]);
+            _json(['code' => 106,'msg' => '写安装文件失败，请检查站点根目录' . ROOTPATH . '下installed文件的写入权限']);
         }
     }
 

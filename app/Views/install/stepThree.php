@@ -5,11 +5,11 @@
 	<title>量U-安装</title>
 	<meta name="description" content="The small framework with powerful features">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel='stylesheet' id='dashicons-css'  href='/install_style/css/dashicons.min.css?ver=5.4.2' type='text/css' media='all' />
-	<link rel='stylesheet' id='buttons-css'  href='/install_style/css/buttons.min.css?ver=5.4.2' type='text/css' media='all' />
-	<link rel='stylesheet' id='forms-css'  href='/install_style/css/forms.min.css?ver=5.4.2' type='text/css' media='all' />
-	<link rel='stylesheet' id='l10n-css'  href='/install_style/css/l10n.min.css?ver=5.4.2' type='text/css' media='all' />
-	<link rel='stylesheet' id='install-css'  href='/install_style/css/install.min.css?ver=5.4.2' type='text/css' media='all' />
+	<link rel='stylesheet' id='dashicons-css'  href='/install_style/css/dashicons.min.css' type='text/css' media='all' />
+	<link rel='stylesheet' id='buttons-css'  href='/install_style/css/buttons.min.css' type='text/css' media='all' />
+	<link rel='stylesheet' id='forms-css'  href='/install_style/css/forms.min.css?' type='text/css' media='all' />
+	<link rel='stylesheet' id='l10n-css'  href='/install_style/css/l10n.min.css' type='text/css' media='all' />
+	<link rel='stylesheet' id='install-css'  href='/install_style/css/install.min.css' type='text/css' media='all' />
 	<link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
 	
 	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
@@ -18,10 +18,9 @@
 
 <p id="logo"><a href="">lion-u</a></p>
 <form method="post" action="/static/" name="config">
-<p>量U广告归因——用数据挖掘您的广告价值</p>
-	<p>安装进度</p>
-	<ul id="install-process">
-	</ul>
+	<p class="step">量U广告归因——用数据挖掘您的广告价值</p>
+	<p class="step">安装进度</p>
+	<ul id="install-process"></ul>
 	<p class="step"><input name="submit" type="submit" value="正在安装" class="button button-large" /></p>
 </form>
 </body>
