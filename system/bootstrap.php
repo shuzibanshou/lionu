@@ -56,6 +56,15 @@ if (! defined('APPPATH'))
 }
 
 /**
+ * The path to the application directory.
+ */
+if (! defined('BACKENDPATH'))
+{
+	define('BACKENDPATH', realpath($paths->appBackEndDirectory) . DIRECTORY_SEPARATOR);
+}
+
+
+/**
  * The path to the project root directory. Just above APPPATH.
  */
 if (! defined('ROOTPATH'))
