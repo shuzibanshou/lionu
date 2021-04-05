@@ -301,10 +301,10 @@ class Install extends Controller
                 )
             );
             if (file_get_contents($sdkDomainUrl, false, stream_context_create($opts)) != 'ok') {
-                _json(['code' => 104,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
+                _json(['code' => 107,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
             }
         } catch (\Exception $e) {
-            _json(['code' => 104,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
+            _json(['code' => 108,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
         }
         
         //
