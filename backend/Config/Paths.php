@@ -50,7 +50,22 @@ class Paths
 	 *
 	 * NO TRAILING SLASH!
 	 */
-	public $appBackEndDirectory = __DIR__ . '/../../app';
+	public $appBackEndDirectory = __DIR__ . '/../../backend';
+	
+	/*
+	 *---------------------------------------------------------------
+	 * APPLICATION FOLDER NAME
+	 *---------------------------------------------------------------
+	 *
+	 * If you want this front controller to use a different "app"
+	 * folder than the default one you can set its name here. The folder
+	 * can also be renamed or relocated anywhere on your getServer. If
+	 * you do, use a full getServer path. For more info please see the user guide:
+	 * http://codeigniter.com/user_guide/general/managing_apps.html
+	 *
+	 * NO TRAILING SLASH!
+	 */
+	public $appFrontEndDirectory = __DIR__ . '/../../front';
 
 	/*
 	 * ---------------------------------------------------------------

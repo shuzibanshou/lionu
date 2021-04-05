@@ -111,7 +111,7 @@ class Receive extends BaseController
             'click_time'=>$get['ts']
         );
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $res = $this->insert($db, 'log_android_click_data', $clickData);
         if(!$res){
              //TODO写错误日志并推送消息到前端

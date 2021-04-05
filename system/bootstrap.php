@@ -63,6 +63,14 @@ if (! defined('BACKENDPATH'))
 	define('BACKENDPATH', realpath($paths->appBackEndDirectory) . DIRECTORY_SEPARATOR);
 }
 
+/**
+ * The path to the application directory.
+ */
+if (! defined('FRONTENDPATH'))
+{
+	define('FRONTENDPATH', realpath($paths->appFrontEndDirectory) . DIRECTORY_SEPARATOR);
+}
+
 
 /**
  * The path to the project root directory. Just above APPPATH.
@@ -103,7 +111,7 @@ if (! defined('TESTPATH'))
  */
 if (! defined('APP_NAMESPACE'))
 {
-	require_once APPPATH . 'Config/Constants.php';
+	require_once BACKENDPATH . 'Config/Constants.php';
 }
 
 // Let's see if an app/Common.php file exists
