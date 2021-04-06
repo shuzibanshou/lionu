@@ -1,10 +1,10 @@
 <?php namespace Config;
 
-define( 'hostname', '' );
-define( 'username', '' );
+define( 'hostname', '127.0.0.1' );
+define( 'username', 'root' );
 define( 'password', '' );
-define( 'database', '' );
-define( 'port', '' );
+define( 'database', 'lion-u' );
+define( 'port', '3306' );
 
 /**
  * Database Configuration
