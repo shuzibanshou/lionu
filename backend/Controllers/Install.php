@@ -303,7 +303,7 @@ class Install extends Controller
                     'timeout' => 1 // 单位秒
                 )
             );
-            $content = file_get_contents($sdkDomainUrl, false, stream_context_create($opts));
+            $content = @file_get_contents($sdkDomainUrl, false, stream_context_create($opts));
             print_r($content);
             exit;
             if (file_get_contents($sdkDomainUrl, false, stream_context_create($opts)) != 'ok') {
