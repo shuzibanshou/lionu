@@ -57,8 +57,8 @@ class Install extends Controller
             header('Location:/install/index?step=1');
             exit();
         }
-        $this->checkPermission();
         $this->checkInstall($step);
+        $this->checkPermission();
         $this->checkPHPEnv();
         switch ($step) {
             case 1:
