@@ -290,10 +290,6 @@ class Install extends Controller
      */
     public function checkConfigAndEnvVersion()
     {
-        $res = file_get_contents('http://api.lion-u.com/ping/index');
-        var_dump($res);
-        exit;
-    
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
         // 测试系统配置-SDK域名是否可访问 1s超时则说明域名未进行公网部署
         // 使用file_get_contents获取内容需要加http协议
@@ -304,7 +300,7 @@ class Install extends Controller
             $opts = array(
                 'http' => array(
                     'method' => "GET",
-                    'timeout' => 3 // 单位秒
+                    'timeout' => 10 // 单位秒
                 )
             );
             if (@file_get_contents($sdkDomainUrl) != 'ok') {
