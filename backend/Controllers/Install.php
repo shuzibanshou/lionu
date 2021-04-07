@@ -300,11 +300,11 @@ class Install extends Controller
             $opts = array(
                 'http' => array(
                     'method' => "GET",
-                    'timeout' => 1 // 单位秒
+                    'timeout' => 10 // 单位秒
                 )
             );
             $content = @file_get_contents($sdkDomainUrl, false, stream_context_create($opts));
-            print_r($content);
+            var_dump($content);
             exit;
             if (file_get_contents($sdkDomainUrl, false, stream_context_create($opts)) != 'ok') {
                 _json(['code' => 107,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
