@@ -295,6 +295,8 @@ class Install extends Controller
         // 使用file_get_contents获取内容需要加http协议
         $sdkDomain = (stripos(trim($post['sdkdomain']),'http') !== false) ? trim($post['sdkdomain']) : 'http://'.trim($post['sdkdomain']);
         $sdkDomainUrl = $sdkDomain . '/ping/index';
+        echo $sdkDomainUrl;
+        exit;
         try {
             $opts = array(
                 'http' => array(
