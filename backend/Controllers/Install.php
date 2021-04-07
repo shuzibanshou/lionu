@@ -295,8 +295,7 @@ class Install extends Controller
         // 使用file_get_contents获取内容需要加http协议
         $sdkDomain = (stripos(trim($post['sdkdomain']),'http') !== false) ? trim($post['sdkdomain']) : 'http://'.trim($post['sdkdomain']);
         $sdkDomainUrl = $sdkDomain . '/ping/index';
-        echo $sdkDomainUrl;
-        exit;
+
         try {
             $opts = array(
                 'http' => array(
@@ -304,12 +303,16 @@ class Install extends Controller
                     'timeout' => 1 // 单位秒
                 )
             );
+            $content = file_get_contents($sdkDomainUrl, false, stream_context_create($opts));
+            print_r($content);
+            exit;
             if (file_get_contents($sdkDomainUrl, false, stream_context_create($opts)) != 'ok') {
                 _json(['code' => 107,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
             }
         } catch (\Exception $e) {
             _json(['code' => 108,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
         }
+        
 
         //
         
