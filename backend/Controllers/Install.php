@@ -290,7 +290,7 @@ class Install extends Controller
      */
     public function checkConfigAndEnvVersion()
     {
-        $res = file_get_contents('http://api.lion-u.com/ping/index');
+        $res = file_get_contents('http://www.baidu.com');
         var_dump($res);
         exit;
     
