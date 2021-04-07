@@ -303,6 +303,8 @@ class Install extends Controller
                     'timeout' => 3 // 单位秒
                 )
             );
+            echo $sdkDomainUrl;
+            exit;
             if (@file_get_contents($sdkDomainUrl) != 'ok') {
                 _json(['code' => 107,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
             }
