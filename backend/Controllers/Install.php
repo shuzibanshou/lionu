@@ -292,7 +292,7 @@ class Install extends Controller
     {
         $curl = curl_init();
         //设置抓取的url
-        curl_setopt($curl, CURLOPT_URL, 'http://baidu.com');
+        curl_setopt($curl, CURLOPT_URL, 'http://api.lion-u.com/ping/index');
         //设置头文件的信息作为数据流输出
         curl_setopt($curl, CURLOPT_HEADER, 0);
         // 超时设置,以秒为单位
