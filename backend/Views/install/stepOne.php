@@ -155,7 +155,6 @@
 				'url':'/install/checkConfigAndEnvVersion',
 				'type':'POST',
 				'data':dbconf,
-				'async':false,
 				'dataType':'json',
 				'success':function(res){
 					if(res.code != 200){

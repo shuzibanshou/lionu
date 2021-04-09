@@ -290,7 +290,7 @@ class Install extends Controller
      */
     public function checkConfigAndEnvVersion()
     {
-        $curl = curl_init();
+        /* $curl = curl_init();
         //设置抓取的url
         curl_setopt($curl, CURLOPT_URL, 'http://api.lion-u.com/ping/index');
         //设置头文件的信息作为数据流输出
@@ -319,9 +319,9 @@ class Install extends Controller
             // 打印返回的内容
             var_dump($data);
             curl_close($curl);
-        }
+        } */
     
-        //file_get_contents('http://api.lion-u.com/ping/index');
+        print_r(get_headers('http://api.lion-u.com/ping/index'));
         exit;
     
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
