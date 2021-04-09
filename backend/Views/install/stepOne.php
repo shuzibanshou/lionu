@@ -156,6 +156,9 @@
 				'type':'POST',
 				'data':dbconf,
 				'dataType':'json',
+				'error':function(err){
+					console.log(err)
+				},
 				'success':function(res){
 					if(res.code != 200){
 						alert(res.msg)
