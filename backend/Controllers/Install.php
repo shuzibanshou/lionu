@@ -321,7 +321,7 @@ class Install extends Controller
             curl_close($curl);
         } */
     
-        print_r(get_headers('http://api.lion-u.com/ping/index'));
+        print_r(file_get_contents('http://api.lion-u.com/ping/index'));
         exit;
     
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
