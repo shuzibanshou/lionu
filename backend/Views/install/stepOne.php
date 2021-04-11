@@ -20,7 +20,7 @@
 <p id="logo"><a href="https://www.lion-u.com/"></a></p>
 <!--<p id="title">用数据挖掘您的广告价值</p>-->
 <div id="container">
-    <form method="post" action="/install/index?step=2" name="config">
+    <form method="post" action="/install/index?step=2" name="config" onsubmit="return false">
     <h2>系统信息</h2>
         <table class="form-table" role="presentation">
             <tr>
@@ -119,7 +119,7 @@
 	} */
 	
 	$(document).ready(function(){
-		$("form[name='config']").submit(function(){
+		$("input[name='submit']").click(function(){
 			if (!verifyCheck._click()){
 				return false;
 			}
@@ -157,14 +157,6 @@
 				'type':'POST',
 				'data':dbconf,
 				'dataType':'json',
-				'error':function(xhr,status,error){
-					console.log(status)
-					console.log(error)
-				},
-				'complete':function(xhr,status){
-					console.log(status)
-					console.log(error)
-				},
 				'success':function(res){
 					if(res.code != 200){
 						alert(res.msg)
@@ -173,7 +165,7 @@
 				}
 			})
 
-			return pass
+			return false //pass
 		})
 	})
 </script>
