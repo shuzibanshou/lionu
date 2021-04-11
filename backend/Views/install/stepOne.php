@@ -150,7 +150,6 @@
 			}*/
 
 			var dbconf = $(".conf").serialize();
-			var pass = true;
 
 			$.ajax({
 				'url':'/install/checkConfigAndEnvVersion',
@@ -158,18 +157,18 @@
 				'data':dbconf,
 				'dataType':'json',
 				'error':function(xhr, status, err){
-					console.log(err)
-					console.log(status)
+					alert('请检查系统部署状态并提升服务器配置')
 				},
 				'success':function(res){
 					if(res.code != 200){
 						alert(res.msg)
-						pass = false;
+					} else {
+						//页面跳转
+						window.location.href = '?step=2'
 					}
 				}
 			})
 
-			return false //pass
 		})
 	})
 </script>
