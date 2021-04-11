@@ -107,7 +107,7 @@
     <!-- <input name="noapi" type="hidden" value="1" /> -->
     <?php } ?>
         <!-- <input type="hidden" name="language" value=" /> -->
-        <p class="step"><input name="submit" type="submit" value="提交配置" class="button button-large" /></p>
+        <p class="step"><input name="submit" type="button" value="提交配置" class="button button-large" /></p>
     </form>
 </div>
 </body>
