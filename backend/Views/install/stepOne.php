@@ -151,26 +151,30 @@
 
 			var dbconf = $(".conf").serialize();
 			var pass = true;
-			$.ajax({
-				'url':'/install/checkConfigAndEnvVersion',
-				'type':'POST',
-				'data':dbconf,
-				'dataType':'json',
-				'error':function(xhr,status,error){
-					console.log(status)
-					console.log(error)
-				},
-				'complete':function(xhr,status){
-					console.log(status)
-					console.log(error)
-				},
-				'success':function(res){
-					if(res.code != 200){
-						alert(res.msg)
-						pass = false;
-					}
-				}
-			})
+			try{
+    			$.ajax({
+    				'url':'/install/checkConfigAndEnvVersion',
+    				'type':'POST',
+    				'data':dbconf,
+    				'dataType':'json',
+    				'error':function(xhr,status,error){
+    					console.log(status)
+    					console.log(error)
+    				},
+    				'complete':function(xhr,status){
+    					console.log(status)
+    					console.log(error)
+    				},
+    				'success':function(res){
+    					if(res.code != 200){
+    						alert(res.msg)
+    						pass = false;
+    					}
+    				}
+    			})
+			} catch(exception){	
+				console.log(exception)
+			}
 			return pass
 		})
 	})
