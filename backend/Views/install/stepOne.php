@@ -157,7 +157,7 @@
 				'data':dbconf,
 				'dataType':'json',
 				'error':function(xhr, status, err){
-					alert('请检查系统部署状态并提升服务器配置,并关闭protobuf扩展')
+					alert('请检查系统部署状态并提升服务器配置,关闭protobuf扩展并调大output_buffering的值')
 				},
 				'success':function(res){
 					if(res.code != 200){
