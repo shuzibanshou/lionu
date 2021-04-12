@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<p id="logo"><a href="">lion-u</a></p>
+<p id="logo"><a href="https://www.lion-u.com/"></a></p>
 <form method="post" action="/static/" name="config">
 	<p class="step">量U广告归因——用数据挖掘您的广告价值</p>
 	<p class="step">安装进度</p>
