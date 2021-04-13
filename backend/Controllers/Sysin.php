@@ -169,13 +169,17 @@ class Sysin extends NeedloginController
     	                    //若启动失败 则以非服务方式再启动一次 收集输出错误信息
     	                    $start_kafka_shell = 'sudo '.$kafka_sh.' '.$kafka_conf;
     	                    exec($start_kafka_shell, $start_kafka_result, $start_kafka_status);
-    	                    var_dump($start_kafka_result);
-    	                    exit;
+    	                    //var_dump($start_kafka_result);
+    	                    //exit;
     	                    if(is_array($start_kafka_result) && count($start_kafka_result) > 0){
     	                        foreach ($start_kafka_result as $k=>$_line){
     	                            if(stripos($_line, '] ERROR') !== false){
     	                                $_line = isset($start_kafka_result[$k+1]) ? $_line."\r\n".$start_kafka_result[$k+1] : $_line;
     	                                _json(['code'=>199,'msg'=>'启动kafka失败'.$_line],1);
+    	                            } elseif(stripos($_line, 'insufficient\ memory') !== false){
+    	                                _json(['code'=>199,'msg'=>'启动kafka失败,内存不足'],1);
+    	                            } else {
+    	                                _json(['code'=>199,'msg'=>'启动kafka失败,其他原因'],1);
     	                            }
     	                        }
     	                      }
