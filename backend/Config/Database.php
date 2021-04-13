@@ -1,9 +1,9 @@
 <?php namespace Config;
 
-define( 'hostname', '127.0.0.1' );
+define( 'hostname', '59.110.142.191' );
 define( 'username', 'root' );
-define( 'password', '' );
-define( 'database', 'lion-u' );
+define( 'password', 'QWERasdf1234' );
+define( 'database', 'lion-test' );
 define( 'port', '3306' );
 
 /**
