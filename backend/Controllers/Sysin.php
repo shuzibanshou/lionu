@@ -109,10 +109,10 @@ class Sysin extends NeedloginController
     
             	    exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
             	    
-            	    dump($start_zookeeper_status);
-            	    dump($start_zookeeper_result);
+            	    //dump($start_zookeeper_status);
+            	    //dump($start_zookeeper_result);
             	    //echo get_current_user();
-            	    exit;
+            	    //exit;
             	    if(!$start_zookeeper_status){
             	        //以服务形式启动后前端不会再接收到输出信息所以需要根据端口检查服务是否启动-但启动需要缓冲时间故需要等待几秒（暂无其他更好的解决方案）
             	        sleep(2);
@@ -121,6 +121,8 @@ class Sysin extends NeedloginController
             	            //若启动失败 则以非服务方式再启动一次 收集输出错误信息
             	            $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
             	            exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
+            	            var_dump($start_zookeeper_result);
+            	            exit;
             	            if(is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0){
             	                foreach ($start_zookeeper_result as $k=>$_line){
             	                    if(stripos($_line, '] ERROR') !== false){
