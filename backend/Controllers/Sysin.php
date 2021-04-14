@@ -54,7 +54,7 @@ class Sysin extends NeedloginController
 	    if(!$check_mem_status){
 	        if(is_array($check_mem_result) && count($check_mem_result) > 0){
 	            $_mem_ = explode(':', $check_mem_result[0]);
-	            $_mem = intval(trim(str_replace('kB', '', $_mem_[1])) / 1000 /1000);   //GB
+	            $_mem = round(trim(str_replace('kB', '', $_mem_[1])) / 1000 /1000);   //GB
 	            $data['mem'] = $_mem;
 	        }
 	    }
@@ -119,9 +119,10 @@ class Sysin extends NeedloginController
             	        exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
             	        if($zookeeper_port_status != 0){
             	            //若启动失败 则以非服务方式再启动一次 收集输出错误信息
-            	            $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
+            	            $start_zookeeper_shell = $zookeeper_sh.' '.$zookeeper_conf;	//'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
             	            exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
-            	            //var_dump($start_zookeeper_result);
+            
+					var_dump($start_zookeeper_status);
             	            //exit;
             	            if(is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0){
             	                foreach ($start_zookeeper_result as $k=>$_line){
@@ -132,12 +133,12 @@ class Sysin extends NeedloginController
             	                        _json(['code'=>199,'msg'=>'启动zookeeper失败,内存不足'],1);
             	                    } else {
             	                        _json(['code'=>199,'msg'=>'启动zookeeper失败,其他原因'],1);
-            	                    }
-            	                }
-            	            }
+            	                    		 }
+            	                             }
+            	                      }
             	        } else {
             	            _json(['code'=>200,'msg'=>'启动zookeeper成功'],1);
-            	        }
+            	             }
             	    } else {
             	    _json(['code'=>199,'msg'=>'启动zookeeper失败,请检查webServer用户及php-fpm用户权限或联系运维手动启动'],1);
             	    }
