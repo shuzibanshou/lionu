@@ -102,10 +102,10 @@ class Sysin extends NeedloginController
 	            //根据端口检查服务是否启动
 	            exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
 	            if($zookeeper_port_status != 0){
-            	    //以服务形式启动zookeeper以免卡住php进程
+            	    //以服务形式启动zookeeper以免卡住php进程 sudo是最后的方案 因为需要修改/etc/sudoers实际上是增加了复杂度 最方便快捷的方法是修改脚本文件的权限为0755
             	    $zookeeper_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/zookeeper-server-start.sh';
             	    $zookeeper_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/zookeeper.properties&';
-            	    $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' -daemon '.$zookeeper_conf;
+            	    $start_zookeeper_shell = $zookeeper_sh.' -daemon '.$zookeeper_conf;	//'sudo '. zookeeper_sh.' -daemon '.$zookeeper_conf
     
             	    exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
             	    
@@ -122,7 +122,7 @@ class Sysin extends NeedloginController
             	            $start_zookeeper_shell = $zookeeper_sh.' '.$zookeeper_conf;	//'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
             	            exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
             
-					var_dump($start_zookeeper_status);
+					//var_dump($start_zookeeper_status);
             	            //exit;
             	            if(is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0){
             	                foreach ($start_zookeeper_result as $k=>$_line){
