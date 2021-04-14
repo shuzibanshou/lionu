@@ -103,7 +103,7 @@ class Sysin extends NeedloginController
             case 'php-kafka':
                 break;
             case 'zookeeper':
-                // 根据端口检查服务是否启动
+                // 根据端口检查服务是否启动  没有查找到结果 exec第三个变量为1 如果成功查询到 则为0 
                 exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
                 if ($zookeeper_port_status != 0) {
                     // 以服务形式启动zookeeper以免卡住php进程 sudo是最后的方案 因为需要修改/etc/sudoers实际上是增加了复杂度 最方便快捷的方法是修改脚本文件的权限为0755
@@ -153,18 +153,17 @@ class Sysin extends NeedloginController
                         _json(['code' => 199,'msg' => '启动zookeeper失败,请检查webServer用户及php-fpm用户权限或联系运维手动启动'], 1);
                     }
                 } else {
-                    _json([
-                        'code' => 198,
-                        'msg' => 'zookeeper已启动,请勿重复启动'
-                    ], 1);
+                    _json(['code' => 198,'msg' => 'zookeeper已启动,请勿重复启动'], 1);
                 }
                 break;
             case 'kafka':
+                // 先判断zookeeper是否开启
+                exec("netstat -tnlp | grep  2181", $zk_result, $zk_status);
+                if($zk_status != 0){
+                    _json(['code' => 198,'msg' => '请先启动zookeeper'], 1);
+                }
                 // 根据端口检查服务是否启动
                 exec("netstat -tnlp | grep  9092", $kafka_port_result, $kafka_port_status);
-                // dump($kafka_port_status);
-                // dump($kafka_port_result);
-                // exit;
                 if ($kafka_port_status != 0) {
                     // 以服务形式启动kafka以免卡住php进程
                     $kafka_sh = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/kafka-server-start.sh';
@@ -189,22 +188,12 @@ class Sysin extends NeedloginController
                                 foreach ($start_kafka_result as $k => $_line) {
                                     if (stripos($_line, '] ERROR') !== false) {
                                         $_line = isset($start_kafka_result[$k + 1]) ? $_line . "\r\n" . $start_kafka_result[$k + 1] : $_line;
-                                        _json([
-                                            'code' => 199,
-                                            'msg' => '启动kafka失败' . $_line
-                                        ], 1);
-                                    } elseif (stripos($_line, 'insufficient\ memory') !== false) {
-                                        _json([
-                                            'code' => 199,
-                                            'msg' => '启动kafka失败,内存不足'
-                                        ], 1);
-                                    } else {
-                                        _json([
-                                            'code' => 199,
-                                            'msg' => '启动kafka失败,其他原因'
-                                        ], 1);
+                                        _json(['code' => 199,'msg' => '启动kafka失败' . $_line], 1);
+                                    } elseif (stripos($_line, 'insufficient memory') !== false) {
+                                        _json(['code' => 199,'msg' => '启动kafka失败,内存不足'], 1);
                                     }
                                 }
+                                _json(['code' => 199,'msg' => '启动kafka失败,其他原因'], 1);
                             }
                         } else {
                             _json([
@@ -219,10 +208,7 @@ class Sysin extends NeedloginController
                         ], 1);
                     }
                 } else {
-                    _json([
-                        'code' => 198,
-                        'msg' => 'kafka已启动,请勿重复启动'
-                    ], 1);
+                    _json(['code' => 198,'msg' => 'kafka已启动,请勿重复启动'], 1);
                 }
                 break;
             case 'spark':
