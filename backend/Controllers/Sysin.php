@@ -127,8 +127,8 @@ class Sysin extends NeedloginController
                             $start_zookeeper_shell = 'sudo ' . $zookeeper_sh . ' ' . $zookeeper_conf;
                             exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
                             
-                            var_dump($start_zookeeper_result);
-                            exit;
+                            //var_dump($start_zookeeper_result);
+                            //exit;
                             if (is_array($start_zookeeper_result) && count($start_zookeeper_result) > 0) {
                                 foreach ($start_zookeeper_result as $k => $_line) {
                                     if (stripos($_line, '] ERROR') !== false) {
