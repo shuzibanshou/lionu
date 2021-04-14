@@ -134,12 +134,11 @@ class Sysin extends NeedloginController
                                     if (stripos($_line, '] ERROR') !== false) {
                                         $_line = isset($start_zookeeper_result[$k + 1]) ? $_line . "\r\n" . $start_zookeeper_result[$k + 1] : $_line;
                                         _json(['code' => 199,'msg' => '启动zookeeper失败' . $_line], 1);
-                                    } elseif (stripos($_line, 'insufficient') !== false) {
+                                    } elseif (stripos($_line, 'insufficient memory') !== false) {
                                         _json(['code' => 199,'msg' => '启动zookeeper失败,内存不足'], 1);
-                                    } else {
-                                        _json(['code' => 199,'msg' => '启动zookeeper失败,其他原因'], 1);
                                     }
                                 }
+                                _json(['code' => 199,'msg' => '启动zookeeper失败,其他原因'], 1);
                             } else {
                                 if ($start_zookeeper_status) {
                                     _json(['code' => 200,'msg' => '启动zookeeper成功'], 1);
