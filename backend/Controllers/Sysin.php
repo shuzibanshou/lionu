@@ -103,12 +103,13 @@ class Sysin extends NeedloginController
 	            exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
 	            if($zookeeper_port_status != 0){
             	    //以服务形式启动zookeeper以免卡住php进程 sudo是最后的方案 因为需要修改/etc/sudoers实际上是增加了复杂度 最方便快捷的方法是修改脚本文件的权限为0755
+			//后来发现apache用户无法以daemon方式启动shell脚本 看来sudo是唯一的解决方案了
             	    $zookeeper_sh =  ROOTPATH . 'envsoft/kafka_2.12-2.6.0/bin/zookeeper-server-start.sh';
             	    $zookeeper_conf = ROOTPATH . 'envsoft/kafka_2.12-2.6.0/config/zookeeper.properties&';
-            	    $start_zookeeper_shell = $zookeeper_sh.' -daemon '.$zookeeper_conf;	//'sudo '. zookeeper_sh.' -daemon '.$zookeeper_conf
+            	    $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' -daemon '.$zookeeper_conf;
     
             	    exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
-            	    
+          
             	    //dump($start_zookeeper_status);
             	    //dump($start_zookeeper_result);
             	    //echo get_current_user();
@@ -119,7 +120,7 @@ class Sysin extends NeedloginController
             	        exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
             	        if($zookeeper_port_status != 0){
             	            //若启动失败 则以非服务方式再启动一次 收集输出错误信息
-            	            $start_zookeeper_shell = $zookeeper_sh.' '.$zookeeper_conf;	//'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
+            	            $start_zookeeper_shell = 'sudo '.$zookeeper_sh.' '.$zookeeper_conf;
             	            exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
             
 					//var_dump($start_zookeeper_status);
@@ -135,7 +136,13 @@ class Sysin extends NeedloginController
             	                        _json(['code'=>199,'msg'=>'启动zookeeper失败,其他原因'],1);
             	                    		 }
             	                             }
-            	                      }
+            	                      } else {
+                                                       if($start_zookeeper_status){
+										_json(['code'=>200,'msg'=>'启动zookeeper成功'],1);
+								      } else {
+										_json(['code'=>199,'msg'=>'启动zookeeper失败,请检查apache或者nginx等webserver用户是否拥有sudo权限'],1);
+									}
+						}
             	        } else {
             	            _json(['code'=>200,'msg'=>'启动zookeeper成功'],1);
             	             }
