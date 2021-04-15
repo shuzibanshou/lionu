@@ -103,6 +103,7 @@ class Sysin extends NeedloginController
             case 'php-kafka':
                 break;
             case 'zookeeper':
+                // 检查shell脚本可执行权限
                 // 根据端口检查服务是否启动  没有查找到结果 exec第三个变量为1 如果成功查询到 则为0 
                 exec("netstat -tnlp | grep  2181", $zookeeper_port_result, $zookeeper_port_status);
                 if ($zookeeper_port_status != 0) {
@@ -114,6 +115,7 @@ class Sysin extends NeedloginController
                     
                     exec($start_zookeeper_shell, $start_zookeeper_result, $start_zookeeper_status);
                     
+                    // echo $start_zookeeper_shell;
                     // dump($start_zookeeper_status);
                     // dump($start_zookeeper_result);
                     // echo get_current_user();
@@ -196,16 +198,10 @@ class Sysin extends NeedloginController
                                 _json(['code' => 199,'msg' => '启动kafka失败,其他原因'], 1);
                             }
                         } else {
-                            _json([
-                                'code' => 200,
-                                'msg' => '启动kafka成功'
-                            ], 1);
+                            _json(['code' => 200,'msg' => '启动kafka成功'], 1);
                         }
                     } else {
-                        _json([
-                            'code' => 199,
-                            'msg' => '启动kafka失败,请检查脚本可执行权限'
-                        ], 1);
+                        _json(['code' => 199,'msg' => '启动kafka失败,请检查脚本可执行权限'], 1);
                     }
                 } else {
                     _json(['code' => 198,'msg' => 'kafka已启动,请勿重复启动'], 1);
@@ -215,10 +211,7 @@ class Sysin extends NeedloginController
                 
                 break;
             default:
-                _json([
-                    'code' => 198,
-                    'msg' => '参数错误'
-                ]);
+                _json(['code' => 198,'msg' => '参数错误']);
                 break;
         }
     }
