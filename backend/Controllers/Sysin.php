@@ -208,7 +208,25 @@ class Sysin extends NeedloginController
                 }
                 break;
             case 'spark':
-                
+                //检查启动脚本的可执行权限
+                $spark_sh = ROOTPATH . 'envsoft/spark-2.4.7-bin-hadoop2.7/sbin/start-all.sh';
+                if(is_executable($spark_sh)){
+                    exec('sudo '.$spark_sh, $start_spark_result, $start_spark_status);
+                    //dump($start_spark_result);
+                    if(count($start_spark_result) > 0){
+                        foreach($start_spark_result as $_line){
+                            if (stripos($_line, 'Permission denied') !== false) {
+                                _json(['code' => 199,'msg' => '启动 Spark 失败,请检查apache或者nginx等webserver用户是否拥有sudo权限'], 1);
+                            } elseif(stripos($_line, 'Stop it first') !== false){
+                                _json(['code' => 199,'msg' => 'Spark已启动Master或Worker,请先停止再启动'], 1);
+                            }
+                        }
+                    }
+                    _json(['code' => 200,'msg' => '启动Spark成功']);
+                    
+                } else {
+                    _json(['code' => 198,'msg' => '启动 spark 失败,请检查 start-all.sh 脚本可执行权限'], 1);
+                }
                 break;
             default:
                 _json(['code' => 198,'msg' => '参数错误']);
