@@ -7,16 +7,18 @@ then
     echo "编译需要root用户"
     exit 1
 fi
-cd /tmp
-if [ ! -d './rdkafka' ]
+#cd /tmp
+
+if [ ! -d '/tmp/rdkafka' ]
 then
-	mkdir ./rdkafka
-	if [ ! -f  rdkafka-4.1.2.tgz ]
+	mkdir /tmp/rdkafka
+	if [ ! -f  /tmp/rdkafka-4.1.2.tgz ]
 	then
-		cp ~/rdkafka-4.1.2.tgz ./rdkafka-4.1.2.tgz
+		cp ./rdkafka-4.1.2.tgz /tmp/rdkafka-4.1.2.tgz
 	fi
- 	tar -zxvf  rdkafka-4.1.2.tgz -C ./rdkafka
+ 	tar -zxvf  /tmp/rdkafka-4.1.2.tgz -C /tmp/rdkafka
 fi
+exit 1
 #查找依赖软件是否已安装
 if [ `rpm -qa | grep epel-release | wc -l` -eq 0 ]
 then
@@ -32,13 +34,13 @@ ldconfig
 if [ `ldconfig -p | grep librdkafka | wc -l` -eq 0 ]
 #编译rdkafka
 then
-	if [ ! -f  librdkafka-master.zip ]
+	if [ ! -f  /tmp/librdkafka-master.zip ]
 	then
-		cp ~/librdkafka-master.zip ./librdkafka-master.zip
+		cp ./librdkafka-master.zip /tmp/librdkafka-master.zip
 	fi
-	unzip librdkafka-master.zip
-	cd ./librdkafka-master
-	 ./configure
+	unzip -d /tmp /tmp/librdkafka-master.zip
+    cd /tmp/librdkafka-master
+	./configure
 	make && make install
 	ldconfig
 fi
@@ -49,7 +51,7 @@ then
 	yum install php-devel
 fi
 
-cd ../rdkafka/rdkafka-4.1.2
+cd /tmp/rdkafka/rdkafka-4.1.2
 phpize=`which phpize`
 ${phpize}
 with_php_config=`which php-config`
@@ -61,5 +63,6 @@ if [ `grep "extension=/usr/lib64/php/modules/rdkafka.so" /etc/php.ini | wc -l` -
 	echo -e "\n[rdkafka]\nextension=/usr/lib64/php/modules/rdkafka.so" >> /etc/php.ini
 fi
 #重启php-fpm和webserver httpd
-kill -SIGUSR2 `cat /var/run/php-fpm.pid`
+#kill -SIGUSR2 `cat /var/run/php-fpm.pid`
+kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
 service httpd restart

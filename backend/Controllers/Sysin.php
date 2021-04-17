@@ -33,7 +33,7 @@ class Sysin extends NeedloginController
         $data = array(
             'cores' => 0,
             'mem' => 0,
-            'php-kafka' => 1,
+            'php-kafka' => 0,
             'zookeeper' => 0,
             'kafka' => 0,
             'spark' => 0
@@ -59,6 +59,9 @@ class Sysin extends NeedloginController
             }
         }
         // 检测php-kafka扩展安装情况
+        if(extension_loaded('rdkafka')){
+            $data['php-kafka'] = 1;
+        }
         
         // 监测zookeeper运行情况 zookeeper默认2181端口
         $check_zookeeper_shell = "netstat -tnlp | grep 2181";
@@ -101,6 +104,32 @@ class Sysin extends NeedloginController
         $soft = $post['soft'];
         switch ($soft) {
             case 'php-kafka':
+                //首先检测系统中是否安装了 rdkafka 扩展
+                $extension_dir = ini_get('extension_dir');
+                $rdkafka_ext_path = $extension_dir .'/rdkafka.so';
+                if(file_exists($rdkafka_ext_path)){
+                    //已安装扩展则进行加载
+                    if(!(bool)ini_get("enable_dl") || (bool)ini_get("safe_mode")){
+                        _json(['code' => 199,'msg' => '请打开php.ini配置文件并将 enable_dl 设置为On或关闭安全模式'], 1);
+                    } else {
+                        if(function_exists('dl')){
+                            if(dl('rdkafka.so')){
+                                _json(['code' => 200,'msg' => '加载成功'], 1);
+                            } else {
+                                _json(['code' => 199,'msg' => '加载rdkafka扩展失败,请手动修改php.ini配置加载rdkafka扩展'], 1);
+                            }
+                        } else {
+                            _json(['code' => 199,'msg' => '您使用的SAPI不支持自动加载，请手动修改php.ini配置加载rdkafka扩展'], 1);
+                        }
+                    }
+                } else {
+                    //未安装扩展则执行安装脚本进行安装
+                    //TODO 无法通过调用脚本的方式进行安装 暂无解决方案
+                    $install_rdkafka_sh = ROOTPATH . 'envsoft/compile_install_rdkafka.sh';
+                    //exec('sudo '.$install_rdkafka_sh);
+                    _json(['code' => 199,'msg' => '系统无法安装rdkafka扩展，请使用root用户执行 '.$install_rdkafka_sh.' 进行手动安装'], 1);
+                }
+                
                 break;
             case 'zookeeper':
                 // 检查shell脚本可执行权限
@@ -214,12 +243,28 @@ class Sysin extends NeedloginController
                     exec('sudo '.$spark_sh, $start_spark_result, $start_spark_status);
                     //dump($start_spark_result);
                     if(count($start_spark_result) > 0){
+                        $_error = 0;
                         foreach($start_spark_result as $_line){
                             if (stripos($_line, 'Permission denied') !== false) {
-                                _json(['code' => 199,'msg' => '启动 Spark 失败,请检查apache或者nginx等webserver用户是否拥有sudo权限'], 1);
+                                if(stripos($_line,'password') !== false){
+                                    $_error = 1;
+                                    break;
+                                } else {
+                                    $_error = 2;
+                                }
                             } elseif(stripos($_line, 'Stop it first') !== false){
                                 _json(['code' => 199,'msg' => 'Spark已启动Master或Worker,请先停止再启动'], 1);
                             }
+                        }
+                        switch($_error){
+                            case 1:
+                                _json(['code' => 199,'msg' => '启动 Spark 失败,请配置ssh以免密方式启动,请参考文档2.1'], 1);
+                                break;
+                            case 2:
+                                _json(['code' => 199,'msg' => '启动 Spark 失败,请检查apache或者nginx等webserver用户是否拥有sudo权限'], 1);
+                                break;
+                            default:
+                                break;
                         }
                     }
                     _json(['code' => 200,'msg' => '启动Spark成功']);
