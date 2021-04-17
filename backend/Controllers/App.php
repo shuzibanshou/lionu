@@ -17,7 +17,7 @@ class App extends NeedloginController
         
         $db = \Config\Database::connect();
         // dump($db);
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         if ($app_step == 3) {
             $sql = "SELECT id,app_name,app_os FROM u_app WHERE app_status=1 AND app_step=3 ORDER BY add_time DESC";
             $query = $db->query($sql);
@@ -37,6 +37,7 @@ class App extends NeedloginController
             $sql = "SELECT id,app_name,package_name,app_os,app_step,app_event,add_time,update_time FROM u_app WHERE app_status=1 ORDER BY add_time DESC LIMIT " . $offset . ',' . $pageSize;
             $query = $db->query($sql);
             $apps = $query->getResultArray();
+            
             if (is_array($apps) && count($apps) > 0) {
                 foreach ($apps as &$app) {
                     $app['app_event'] = json_decode($app['app_event'], true);
@@ -46,6 +47,7 @@ class App extends NeedloginController
             $query = $db->query($total_sql);
             $total = $query->getRowArray();
             $total = $total['total'];
+            
             echo json_encode([
                 'code' => 200,
                 'msg' => 'ok',
@@ -55,6 +57,7 @@ class App extends NeedloginController
                 ]
             ], JSON_UNESCAPED_UNICODE);
         }
+        
     }
 
     public function add()
@@ -84,6 +87,7 @@ class App extends NeedloginController
         $now = date('Y-m-d H:i:s', time());
         $app_name = isset($post['app_name']) && ! empty(trim($post['app_name'])) ? trim($post['app_name']) : exit('app name empty');
         $app_os = isset($post['app_os']) ? intval($post['app_os']) : 1;
+        $package_name = isset($post['package_name']) && ! empty(trim($post['package_name'])) ? trim($post['package_name']) : exit('package name empty');
         // 回传事件模板
         $app_event = json_encode([
             'active' => 0,
@@ -92,6 +96,7 @@ class App extends NeedloginController
         ]);
         $add_data = [
             'app_name' => $app_name,
+            'package_name' => $package_name,
             'app_os' => $app_os,
             'add_time' => $now,
             'app_step' => 1,
@@ -101,7 +106,6 @@ class App extends NeedloginController
             'app_status' => 1
         ];
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
         $res = $this->insert($db, 'u_app', $add_data);
         // dump($res);
         if ($res->resultID == true) {

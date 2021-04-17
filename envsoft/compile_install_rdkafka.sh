@@ -9,16 +9,19 @@ then
 fi
 #cd /tmp
 
+currdir=$(cd $(dirname $0); pwd)
+
 if [ ! -d '/tmp/rdkafka' ]
 then
 	mkdir /tmp/rdkafka
-	if [ ! -f  /tmp/rdkafka-4.1.2.tgz ]
-	then
-		cp ./rdkafka-4.1.2.tgz /tmp/rdkafka-4.1.2.tgz
-	fi
- 	tar -zxvf  /tmp/rdkafka-4.1.2.tgz -C /tmp/rdkafka
 fi
-exit 1
+
+if [ ! -f  /tmp/rdkafka-4.1.2.tgz ]
+	then
+		cp ${currdir}/rdkafka-4.1.2.tgz /tmp/rdkafka-4.1.2.tgz
+fi
+tar -zxvf  /tmp/rdkafka-4.1.2.tgz -C /tmp/rdkafka
+
 #查找依赖软件是否已安装
 if [ `rpm -qa | grep epel-release | wc -l` -eq 0 ]
 then
@@ -36,7 +39,7 @@ if [ `ldconfig -p | grep librdkafka | wc -l` -eq 0 ]
 then
 	if [ ! -f  /tmp/librdkafka-master.zip ]
 	then
-		cp ./librdkafka-master.zip /tmp/librdkafka-master.zip
+		cp ${currdir}/librdkafka-master.zip /tmp/librdkafka-master.zip
 	fi
 	unzip -d /tmp /tmp/librdkafka-master.zip
     cd /tmp/librdkafka-master
