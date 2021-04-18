@@ -22,3 +22,6 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 21/04/16 22:32:58 INFO Worker: Connecting to master localhost:7077...
 21/04/16 22:32:59 INFO TransportClientFactory: Successfully created connection to localhost/127.0.0.1:7077 after 33 ms (0 ms spent in bootstraps)
 21/04/16 22:32:59 INFO Worker: Successfully registered with master spark://localhost:7077
+21/04/18 10:01:44 INFO Worker: Master with url spark://localhost:7077 requested this worker to reconnect.
+21/04/18 10:01:44 INFO Worker: Connecting to master localhost:7077...
+21/04/18 10:01:45 INFO Worker: Successfully registered with master spark://localhost:7077

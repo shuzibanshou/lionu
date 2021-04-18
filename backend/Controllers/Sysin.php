@@ -20,9 +20,19 @@ class Sysin extends NeedloginController
      */
     public function downloadSDK()
     {
-        $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
-        $app_id = isset($post['app_id']) && (intval($post['app_id']) > 0) ? intval($post['app_id']) : exit('app id empty');
-        echo 'sdk下载';
+        $params = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
+        $app_id = isset($params['app_id']) && (intval($params['app_id']) > 0) ? intval($params['app_id']) : exit('app id empty');
+        $sql = "SELECT id,app_name,app_os FROM u_app WHERE id=? LIMIT 0,1";
+        $db = \Config\Database::connect();
+        $query = $db->query($sql,[$app_id]);
+        $app = $query->getRowArray();
+        if($app['app_os'] == 1){
+            //Android
+            
+        } else {
+            //iOS
+            
+        }
     }
 
     /**
