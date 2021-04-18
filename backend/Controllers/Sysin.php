@@ -28,10 +28,63 @@ class Sysin extends NeedloginController
         $app = $query->getRowArray();
         if($app['app_os'] == 1){
             //Android
+            if(!extension_loaded('zip')){
+                $extension_dir = ini_get('extension_dir');
+                $zip_so_path = $extension_dir.'/zip.so';
+                if(file_exists($zip_so_path)){
+                    //扩展已安装
+                    if(function_exists('dl')){
+                        if(!dl('zip.so')){
+                            _json(['code' => 199,'msg' => '加载 zip 扩展失败,请手动修改 php.ini 配置加载 zip 扩展'], 1);
+                        }
+                    } else {
+                        _json(['code' => 199,'msg' => '您使用的SAPI不支持 dl 自动加载，请手动修改 php.ini 配置加载 zip 扩展'], 1);
+                    }
+                } else {
+                    //扩展未安装 php调用shell脚本方式在yum安装带上-y参数会产生Service Unavailable错误 暂没有找到解决方案
+                    //$install_zip_sh = ROOTPATH . 'envsoft/compile_install_zip.sh > /dev/null';
+                    //exec('sudo '.$install_zip_sh, $install_zip_result, $install_zip_status);
+                    $install_zip_sh = ROOTPATH . 'envsoft/compile_install_zip.sh';
+                    _json(['code' => 199,'msg' => "系统还未安装 php-zip 扩展,请使用root用户手动执行{$install_zip_sh}进行安装"], 1);
+                }
+            }
             
-        } else {
+            $source_file = $_SERVER["DOCUMENT_ROOT"].'/download_sdk/LionsU_Android.aar';
+            if(file_exists($source_file)){
+                $dest_file = '/tmp/LionsU_Android_'.$app_id.'.aar';
+                $cp_result = copy($source_file,$dest_file);
+                $zip = new \ZipArchive;
+                if ($zip->open($dest_file) === TRUE) {
+                    $conf = array(
+                        'host'=>SDKDOMAIN,
+                        'appid'=>$app_id
+                    );
+                    $conf = json_encode($conf);
+                    $zip->addFromString('assets/lion-u-config.json', $conf);
+                    $zip->close();
+                    //下载SDK
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/vnd.android.package-archive');
+                    header('Content-Disposition: attachment; filename='.basename($dest_file));
+                    header('Content-Transfer-Encoding: binary');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($dest_file));
+                    ob_clean();
+                    flush();
+                    readfile($dest_file);
+                    unlink($dest_file);
+                } else {
+                    exit('打开sdk包失败');
+                }
+            } else {
+                exit('Android SDK源文件不存在');
+            }
+        } elseif($app['app_os'] == 2) {
             //iOS
-            
+            header('Location:/download_sdk/LionsU_iOS.rar');
+            exit; //一定要加这行才会进行跳转
         }
     }
 

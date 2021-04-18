@@ -25,3 +25,4 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 21/04/18 10:01:43 INFO Master: Telling app of lost worker: worker-20210416223258-192.168.238.138-38403
 21/04/18 10:01:44 WARN Master: Got heartbeat from unregistered worker worker-20210416223258-192.168.238.138-38403. Asking it to re-register.
 21/04/18 10:01:45 INFO Master: Registering worker 192.168.238.138:38403 with 2 cores, 2.8 GB RAM
+21/04/18 19:58:35 ERROR Master: RECEIVED SIGNAL TERM

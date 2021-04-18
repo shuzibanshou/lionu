@@ -25,3 +25,4 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 21/04/18 10:01:44 INFO Worker: Master with url spark://localhost:7077 requested this worker to reconnect.
 21/04/18 10:01:44 INFO Worker: Connecting to master localhost:7077...
 21/04/18 10:01:45 INFO Worker: Successfully registered with master spark://localhost:7077
+21/04/18 19:58:35 ERROR Worker: RECEIVED SIGNAL TERM
