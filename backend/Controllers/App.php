@@ -137,7 +137,7 @@ class App extends NeedloginController
         ];
         
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $update_sql = "UPDATE u_app SET `app_step`=2 WHERE id={$app_id}";
         $res = $db->query($update_sql);
         
@@ -166,7 +166,7 @@ class App extends NeedloginController
         ];
         
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $update_sql = "UPDATE u_app SET `app_step`=3 WHERE id={$app_id}";
         $res = $db->query($update_sql);
         
@@ -191,7 +191,7 @@ class App extends NeedloginController
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES); // todo
         $app_id = isset($post['app_id']) && (intval($post['app_id']) > 0) ? intval($post['app_id']) : exit('app id empty');
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $filter_params = [
             'id=' => $app_id
         ];
@@ -244,7 +244,7 @@ class App extends NeedloginController
         ];
         
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $res = $this->update($db, 'app', $update_data, $where_condition);
         if ($res->resultID == true) {
             echo json_encode([
@@ -290,7 +290,7 @@ class App extends NeedloginController
         $event_name = isset($post['event_name']) && ! empty(trim($post['event_name'])) ? trim($post['event_name']) : exit('event name empty');
         
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $select_sql = "SELECT app_event FROM u_app WHERE id={$app_id}";
         $query = $db->query($select_sql);
         $apps = $query->getResultArray();

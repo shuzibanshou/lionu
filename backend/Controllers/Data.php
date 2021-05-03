@@ -31,7 +31,7 @@ class Data extends BaseController{
     //ltv base data
     public function ltvBase(){
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $sql = "select group_concat(pay_amount,',',pay_days order by pay_days SEPARATOR '|') AS pay_amount,plan_id FROM test.statistics_pay WHERE
  active_date>=? group by plan_id";
         $query = $db->query($sql,['2021-01-10']);
@@ -95,7 +95,7 @@ class Data extends BaseController{
         $uid = (isset($params['uid']) && (intval($params['uid']) > 0)) ? intval($params['uid']) : '';
         
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $filter_params = [
             'app_id='=>$appid,
             'stat_date>='=>$start_date,
@@ -188,7 +188,7 @@ class Data extends BaseController{
         $plan_id = (isset($params['plan_id']) && (intval($params['plan_id']) > 0)) ? intval($params['plan_id']) : '';
         $uid = (isset($params['uid']) && (intval($params['uid']) > 0)) ? intval($params['uid']) : '';
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $filter_params = [
             'app_id='=>$appid,
             'stat_date>='=>$start_date,
@@ -276,7 +276,7 @@ class Data extends BaseController{
         $plan_id = (isset($params['plan_id']) && (intval($params['plan_id']) > 0)) ? intval($params['plan_id']) : '';
         $uid = (isset($params['uid']) && (intval($params['uid']) > 0)) ? intval($params['uid']) : '';
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $filter_params = [
             'app_id='=>$appid,
             'stat_date>='=>$start_date,

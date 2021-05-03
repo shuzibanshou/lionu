@@ -115,32 +115,71 @@ class Receive extends BaseController
         $res = $this->insert($db, 'log_android_click_data', $clickData);
         if(!$res){
              //TODO写错误日志并推送消息到前端
-         }
+        }
     }
     
     /**
-     * 接收媒体广告点击数据-IOS
+     * 接收媒体广告点击数据-iOS
      */
-    public function iosClick(){
+    public function iOSClick(){
         $get = $this->request->getGet(null, FILTER_SANITIZE_MAGIC_QUOTES);
-        $clickData = array(
-            'ip'=>$get['ip'],
-            'plan_id'=>$get['plan_id'],
-            'channel_id'=>$get['channel_id'],
-            'idfa'=>$get['idfa'],
-            'idfa_md5'=>md5($get['idfa']),
-            'mac'=>$get['mac'],
-            'mac_md5'=>md5($get['mac']),
-            'ua'=>$get['ua'],
-            'model'=>$get['model'],
-            'appid'=>$get['app_id'],
-            'click_time'=>$get['ts']
-        );
+        $this->_iOSClickParamsFilter($get);
+        $clickData = $this->_iOSClickParamsMediaHandle($get);
+        
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $res = $this->insert($db, 'log_ios_click_data', $clickData);
         if(!$res){
             //TODO写错误日志并推送消息到前端
+        } else {
+            _json(['code'=>200,'msg'=>'ok'],1);
+        }
+    }
+    
+    /**
+     * iOS点击数据过滤
+     * @param array $clickData
+     */
+    private function _iOSClickParamsFilter($clickData){
+        $required = array('idfa_md5','mac_md5','ip','appid','channel_id','plan_id');
+        foreach ($required as $field){
+            if(!isset($clickData[$field]) || empty($clickData[$field]) || (strpos($clickData[$field], '_') !== false)){
+                //TODO 参数写入日志
+                _json(['code'=>199,'msg'=>'参数错误'],1);
+            }
+        }
+    }
+    
+    /**
+     * iOS点击数据根据媒体做特色化处理
+     */
+    private function _iOSClickParamsMediaHandle($clickData){
+        $_clickData = array();
+        switch ($clickData['channel_id']){
+            //头条
+            case 1:
+                if(strpos($clickData['ip'],'.') !== false){
+                    $_clickData['ipv4'] = md5($clickData['ip']); 
+                } elseif(strpos($clickData['ip'],':') !== false) {
+                    $_clickData['ipv6'] = md5($clickData['ip']); 
+                }
+                $_clickData += array(
+                    'plan_id'=>$get['plan_id'],
+                    'channel_id'=>$get['channel_id'],
+                    'idfa'=>$get['idfa'],
+                    'idfa_md5'=>md5($get['idfa']),
+                    'mac_md5'=>$get['mac'],         //头条的mac字段是去掉:后的md5
+                    'model'=>$get['model'],
+                    'appid'=>$get['app_id'],
+                    'click_time'=>$get['ts']
+                );
+                return $_clickData;
+                break;
+            //广点通
+            case 2:
+                
+            default:
+                break;
         }
     }
     

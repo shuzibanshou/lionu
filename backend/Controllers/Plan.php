@@ -16,7 +16,6 @@ class Plan extends BaseController
         $app_id = isset($post['app_id']) && (intval($post['app_id']) > 0) ? intval($post['app_id']) : '';
         $channel_id = isset($post['channel_id']) && (intval($post['channel_id']) > 0) ? intval($post['channel_id']) : '';
         $plan_name = isset($post['plan_name']) && ! empty(trim($post['plan_name'])) ? trim($post['plan_name']) : '';
-        
         //分页
         $page = isset($post['page']) && (intval($post['page']) > 0) ? intval($post['page']) : 1;
         $page_size = isset($post['pageSize']) && (intval($post['pageSize']) > 0) ? intval($post['pageSize']) : 10;
@@ -31,7 +30,7 @@ class Plan extends BaseController
         $filter_params = array_filter($filter_params);
         
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $plans = $this->select($db, 'u_plan', $filter_params,'*','',$limit);
         //TODO 应用信息和渠道信息从redis中获取
         $apps = $this->select($db, 'u_app',[],'id,app_name,app_os','id');
@@ -42,7 +41,7 @@ class Plan extends BaseController
                 $plan['app_os'] = $apps[$plan['app_id']]['app_os'];
                 $plan['app_name'] = $apps[$plan['app_id']]['app_name'];
                 $plan['channel_name'] = $channels[$plan['channel_id']]['channel_name'];
-                $plan['click_monitor_link'] .= '&plan_id='.$plan['id'];
+                $plan['click_monitor_link'] = SDKDOMAIN.$plan['click_monitor_link'].'&plan_id='.$plan['id'];
             }
         }
         //获取计划总条数
@@ -127,7 +126,7 @@ class Plan extends BaseController
             }
             
             $db = \Config\Database::connect();
-            $db->setDatabase('test');
+            //$db->setDatabase('test');
             $res = $this->insert($db, 'u_plan', $add_data);
             if ($res->resultID == true) {
                 echo json_encode([
@@ -154,7 +153,7 @@ class Plan extends BaseController
      */
     public function addInit(){
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         //TODO 应用信息和渠道信息从redis中获取
         $_apps = [];
         $apps = $this->select($db, 'u_app',[],'id AS app_id,app_name,app_os');
@@ -211,7 +210,7 @@ class Plan extends BaseController
     private function get_click_monitor_link($channel_id, $app_id)
     {
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $select_sql = "SELECT conf_value FROM u_conf WHERE conf_key=?";
         $domain = $db->query($select_sql, ['SDKDOMAIN'])->getRowArray();
         if (! isset($domain['conf_value']) || empty($domain['conf_value'])) {
@@ -295,7 +294,7 @@ class Plan extends BaseController
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES); // todo
         $plan_id = isset($post['plan_id']) && (intval($post['plan_id']) > 0) ? intval($post['plan_id']) : exit('plan id empty');
         $db = \Config\Database::connect();
-        $db->setDatabase('test');
+        //$db->setDatabase('test');
         $filter_params = [
             'id=' => $plan_id
         ];
