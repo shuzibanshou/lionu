@@ -39,4 +39,17 @@ class Sysout extends BaseController
 	}
 	
 	
+	/**
+	 * 测试代理接口
+	 */
+	public function testProxy(){
+	    ///file_put_contents('./testProxy.log',json_encode($_COOKIE));
+	    print_r($_SERVER);
+	}
+	
+	public function testProxy2(){
+	    ///file_put_contents('./testProxy.log',json_encode($_COOKIE));
+	    echo 'abc';
+	}
+	
 }
