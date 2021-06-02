@@ -160,10 +160,12 @@ class Sysin extends NeedloginController
 
     /**
      * 启动zookeeper & kafka & spark系统软件
+     * start.sh 检查zip.so 和 rdkafka.so 两个php扩展并启动相关软件
      */
     public function startKafkaAndSpark()
     {
-        $post = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+        _json(['code' => 199,'msg' => '请使用 root 用户执行' . ROOTPATH . 'envsoft/start.sh脚本启动系统'], 1);
+        /* $post = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
         $soft = $post['soft'];
         switch ($soft) {
             case 'php-kafka':
@@ -341,6 +343,6 @@ class Sysin extends NeedloginController
             default:
                 _json(['code' => 198,'msg' => '参数错误']);
                 break;
-        }
+        } */
     }
 }
