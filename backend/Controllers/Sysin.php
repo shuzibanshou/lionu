@@ -189,10 +189,10 @@ class Sysin extends NeedloginController
                     //未安装扩展则执行安装脚本进行安装
                     //TODO 无法通过调用脚本的方式进行安装 暂无解决方案
                     $install_rdkafka_sh = ROOTPATH . 'envsoft/compile_install_rdkafka.sh';
-                    exec('sudo '.$install_rdkafka_sh,$install_rdkafka_result,$install_rdkafka_status);
-                    var_dump($install_rdkafka_result);
-                    var_dump($install_rdkafka_status);
-                    //_json(['code' => 199,'msg' => '系统无法安装rdkafka扩展，请使用root用户执行 '.$install_rdkafka_sh.' 进行手动安装'], 1);
+                    //exec('sudo '.$install_rdkafka_sh,$install_rdkafka_result,$install_rdkafka_status);
+                    //var_dump($install_rdkafka_result);
+                    //var_dump($install_rdkafka_status);
+                    _json(['code' => 199,'msg' => '系统无法安装rdkafka扩展，请使用root用户执行 '.$install_rdkafka_sh.' 进行手动安装'], 1);
                 }
                 
                 break;
