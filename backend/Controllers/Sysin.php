@@ -104,6 +104,7 @@ class Sysin extends NeedloginController
         // 检测CPU核数和内存大小
         $check_cpus_shell = "grep 'physical id' /proc/cpuinfo | sort -u | wc -l"; // 物理CPU个数
         $check_cpu_cores_shell = "grep 'core id' /proc/cpuinfo | sort -u | wc -l"; // 单个CPU核数
+        
         exec($check_cpus_shell, $check_cpus_result, $check_cpus_status);
         exec($check_cpu_cores_shell, $check_cpu_cores_result, $check_cpu_cores_status);
         
