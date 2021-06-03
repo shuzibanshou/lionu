@@ -125,11 +125,22 @@ sleep 5
 ################### 第五部分 启动kafka     ###################
 if [ `netstat -tnlp | grep  2181 | wc -l` -eq 0 ]
 then
-echo '请先启动zookeeper'
+#echo '请先启动zookeeper'
+#如果zookeeper启动失败 则使用普通模式再启动一次以便输出启动日志
+./kafka_2.12-2.6.0/bin/zookeeper-server-start.sh ./kafka_2.12-2.6.0/config/zookeeper.properties&
 exit 2
 fi
 
 ./kafka_2.12-2.6.0/bin/kafka-server-start.sh -daemon ./kafka_2.12-2.6.0/config/server.properties&
 
+sleep 5
 ################### 第六部分 启动spark     ###################
+if [ `netstat -tnlp | grep  9092 | wc -l` -eq 0 ]
+then
+#echo '请先启动kafka'
+#如果kafka启动失败 则使用普通模式再启动一次以便输出启动日志
+./kafka_2.12-2.6.0/bin/kafka-server-start.sh ./kafka_2.12-2.6.0/config/server.properties&
+exit 3
+fi
+
 ./spark-2.4.7-bin-hadoop2.7/sbin/start-all.sh
