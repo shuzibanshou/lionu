@@ -20,6 +20,10 @@ if [ ! -f  /tmp/rdkafka-4.1.2.tgz ]
 	then
 		cp ${currdir}/rdkafka-4.1.2.tgz /tmp/rdkafka-4.1.2.tgz
 fi
+#删除旧文件夹
+if [ -d /tmp/rdkafka ]
+then
+rm -rf /tmp/rdkafka
 tar -zxvf  /tmp/rdkafka-4.1.2.tgz -C /tmp/rdkafka
 
 #查找依赖软件是否已安装
@@ -29,7 +33,11 @@ then
 fi
 if [ `rpm -qa | grep re2c | wc -l` -eq 0 ]
 then
-	yum install re2c
+	yum -y install re2c
+fi
+if [ `rpm -qa | grep ^make | wc -l` -eq 0 ]
+then
+	yum -y install make
 fi
 
 echo "/usr/local/lib" >>/etc/ld.so.conf
@@ -41,8 +49,12 @@ then
 	then
 		cp ${currdir}/librdkafka-master.zip /tmp/librdkafka-master.zip
 	fi
+	#删除旧文件夹
+	if [ -d /tmp/librdkafka-master ]
+	then
+	rm -rf /tmp/librdkafka-master
 	unzip -d /tmp /tmp/librdkafka-master.zip
-    cd /tmp/librdkafka-master
+    	cd /tmp/librdkafka-master
 	./configure
 	make && make install
 	ldconfig
@@ -51,7 +63,7 @@ fi
 #查找依赖软件php-devel是否已安装
 if [ `rpm -qa | grep php-devel | wc -l` -eq 0 ]
 then
-	yum install php-devel
+	yum -y install php-devel
 fi
 
 cd /tmp/rdkafka/rdkafka-4.1.2
