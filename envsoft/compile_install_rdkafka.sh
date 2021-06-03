@@ -10,21 +10,24 @@ fi
 #cd /tmp
 
 currdir=$(cd $(dirname $0); pwd)
-
-if [ ! -d '/tmp/rdkafka' ]
+#删除旧文件
+if [ -d '/tmp/rdkafka' ] || [ -f '/tmp/rdkafka']
 then
-	mkdir /tmp/rdkafka
+	rm -rf /tmp/rdkafka
 fi
+mkdir /tmp/rdkafka
 
 if [ ! -f  /tmp/rdkafka-4.1.2.tgz ]
 	then
 		cp ${currdir}/rdkafka-4.1.2.tgz /tmp/rdkafka-4.1.2.tgz
 fi
-#删除旧文件夹
+
 if [ -d /tmp/rdkafka ]
 then
-rm -rf /tmp/rdkafka
 tar -zxvf  /tmp/rdkafka-4.1.2.tgz -C /tmp/rdkafka
+else
+exit 1
+fi
 
 #查找依赖软件是否已安装
 if [ `rpm -qa | grep epel-release | wc -l` -eq 0 ]
@@ -38,6 +41,11 @@ fi
 if [ `rpm -qa | grep ^make | wc -l` -eq 0 ]
 then
 	yum -y install make
+fi
+#查找依赖软件php-devel是否已安装
+if [ `rpm -qa | grep php-devel | wc -l` -eq 0 ]
+then
+	yum -y install php-devel
 fi
 
 echo "/usr/local/lib" >>/etc/ld.so.conf
@@ -53,6 +61,7 @@ then
 	if [ -d /tmp/librdkafka-master ]
 	then
 	rm -rf /tmp/librdkafka-master
+	fi
 	unzip -d /tmp /tmp/librdkafka-master.zip
     	cd /tmp/librdkafka-master
 	./configure
@@ -60,11 +69,6 @@ then
 	ldconfig
 fi
 
-#查找依赖软件php-devel是否已安装
-if [ `rpm -qa | grep php-devel | wc -l` -eq 0 ]
-then
-	yum -y install php-devel
-fi
 
 cd /tmp/rdkafka/rdkafka-4.1.2
 phpize=`which phpize`
