@@ -104,13 +104,23 @@ class Sysin extends NeedloginController
         // 检测CPU核数和内存大小
         $check_cpus_shell = "grep 'physical id' /proc/cpuinfo | sort -u | wc -l"; // 物理CPU个数
         $check_cpu_cores_shell = "grep 'core id' /proc/cpuinfo | sort -u | wc -l"; // 单个CPU核数
-        
+        // 检测CPU逻辑核数（现代CPU独立物理CPU之上可以搭载多个核心，而每个核心又可以分化出虚拟化的逻辑CPU核心）
+        $check_siblings_shell = "grep 'siblings' /proc/cpuinfo | wc -l"; // 逻辑CPU总数
+
         exec($check_cpus_shell, $check_cpus_result, $check_cpus_status);
         exec($check_cpu_cores_shell, $check_cpu_cores_result, $check_cpu_cores_status);
-        
+        exec($check_siblings_shell, $check_siblings_result, $check_siblings_status);
+
+        // 物理核数
         if (! $check_cpus_status && ! $check_cpu_cores_status) {
-            if (is_array($check_cpus_result) && is_array($check_cpu_cores_result)) {
+            if (is_array($check_cpus_result) && is_array($check_cpu_cores_result)) {        //如果每个物理CPU的核心数不一致 则这种直接相乘算法不适合
                 $data['cores'] = $check_cpus_result[0] * $check_cpu_cores_result[0];
+            }
+        }
+        // 逻辑核数
+        if(! $check_siblings_status){
+            if(is_array($check_siblings_result)){
+                $data['vcpu'] = $check_siblings_result[0];
             }
         }
         $check_mem_shell = "cat /proc/meminfo | grep MemTotal";
