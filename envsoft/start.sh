@@ -120,6 +120,7 @@ fi
 ################### 第四部分 启动zookeeper ###################
 cd ${currdir}
 ./kafka_2.12-2.6.0/bin/zookeeper-server-start.sh  -daemon ./kafka_2.12-2.6.0/config/zookeeper.properties&
+##TODO 使用exec调用shell脚本来收集执行结果
 sleep 5
 ################### 第五部分 启动kafka     ###################
 if [ `netstat -tnlp | grep  2181 | wc -l` -eq 0 ]
