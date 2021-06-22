@@ -50,6 +50,11 @@ if [ `rpm -qa | grep ^make | wc -l` -eq 0 ]
 then
 	yum -y install make
 fi
+#查找编译器是否已安装
+if [ `rpm -qa | grep gcc-c++ | wc -l` -eq 0 ]
+then
+        yum -y install gcc-c++
+fi
 #查找依赖软件php-devel是否已安装
 if [ `rpm -qa | grep php-devel | wc -l` -eq 0 ]
 then
