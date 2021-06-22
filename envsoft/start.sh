@@ -42,6 +42,10 @@ if [ `rpm -qa | grep re2c | wc -l` -eq 0 ]
 then
 	yum -y install re2c
 fi
+if [ `rpm -qa | grep unzip | wc -l` -eq 0 ]
+then
+        yum -y install unzip
+fi
 if [ `rpm -qa | grep ^make | wc -l` -eq 0 ]
 then
 	yum -y install make
