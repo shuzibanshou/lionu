@@ -108,13 +108,9 @@ service php-fpm restart
 service httpd restart
 
 ################### 第三部分 检查并安装JAVA环境 ###################
-if [ `dpkg -l | grep  java | wc -l` -eq 0 ]
+if [ `dpkg -l | grep  default-jdk | wc -l` -eq 0 ]
 then
-	apt -y install java
-fi
-if [ `dpkg -l | grep  java-devel | wc -l` -eq 0 ]
-then
-	apt -y install java-devel
+	apt -y install default-jdk
 fi
 
 ################### 第四部分 启动zookeeper ###################
