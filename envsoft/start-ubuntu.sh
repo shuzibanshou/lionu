@@ -105,7 +105,7 @@ fi
 #重启php-fpm和webserver httpd
 #kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
 service php-fpm restart
-service httpd restart
+service apache2 restart
 
 ################### 第三部分 检查并安装JAVA环境 ###################
 if [ `dpkg -l | grep  default-jdk | wc -l` -eq 0 ]
