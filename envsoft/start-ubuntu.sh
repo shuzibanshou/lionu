@@ -104,9 +104,14 @@ if [ `grep "extension=/usr/lib64/php/modules/zip.so" /etc/php.ini | wc -l` -eq 0
 fi
 #重启php-fpm和webserver httpd
 #kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
+if service --status-all | grep -Fq 'php-fpm'
+then
 service php-fpm restart
+fi
+if service --status-all | grep -Fq 'apache2'
+then
 service apache2 restart
-
+fi
 ################### 第三部分 检查并安装JAVA环境 ###################
 if [ `dpkg -l | grep  default-jdk | wc -l` -eq 0 ]
 then
