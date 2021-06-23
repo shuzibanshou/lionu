@@ -97,7 +97,12 @@ then
 	apt -y install php-zip 
 fi
 
-#扩展配置写入php.ini
+#获取php版本
+php_version = `php -r 'echo PHP_VERSION;' | grep '^[[:digit:]].[[:digit:]]'`
+echo php_version
+exit
+
+#
 if [ `grep "extension=/usr/lib64/php/modules/zip.so" /etc/php.ini | wc -l` -eq 0 ]
  then
 	echo -e "\n[rdkafka]\nextension=/usr/lib64/php/modules/zip.so" >> /etc/php.ini
