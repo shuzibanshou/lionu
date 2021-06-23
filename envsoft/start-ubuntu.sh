@@ -7,7 +7,7 @@
 ################### 第一部分 检查并安装php扩展rdkafka ###################
 #获取php版本
 php_version = `php -r 'echo PHP_VERSION;' | grep '^[[:digit:]].[[:digit:]]'`
-echo php_version
+echo $php_version
 exit
 
 if [ `whoami` != 'root' ]
