@@ -32,4 +32,4 @@ if [ -z "${PYSPARK_PYTHONPATH_SET}" ]; then
   export PYSPARK_PYTHONPATH_SET=1
 fi
 
-export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0
+#export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0
