@@ -5,10 +5,6 @@
 
 
 ################### 第一部分 检查并安装php扩展rdkafka ###################
-#获取php版本
-php_version = `php -r 'echo PHP_VERSION;' | grep '^[[:digit:]].[[:digit:]]'`
-echo $php_version
-exit
 
 if [ `whoami` != 'root' ]
 then
@@ -84,6 +80,15 @@ ${phpize}
 with_php_config=`which php-config`
 ./configure --with-php-config=${with_php_config} 
 make && make install
+################### 第二部分 获取PHP版本和扩展路径 ###################
+#获取php版本
+php_version=`php -r 'echo PHP_VERSION;' |  grep -o '^[[:digit:]].[[:digit:]]'`
+#获取php扩展路径
+php_extension_dir=`php-config --extension-dir`
+echo ${php_extension_dir}
+exit
+#写入apache2 / cli / fpm 三种类型的php.ini
+
 #扩展配置写入php.ini
 if [ `grep "extension=/usr/lib64/php/modules/rdkafka.so" /etc/php.ini | wc -l` -eq 0 ]
  then
@@ -94,7 +99,7 @@ fi
 #kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
 #service httpd restart
 
-################### 第二部分 检查并安装php-zip ###################
+################### 第三部分 检查并安装php-zip ###################
 
 if [ `dpkg -l | grep  php-pecl-zip | wc -l` -eq 0 ]
 then
@@ -116,18 +121,18 @@ if service --status-all | grep -Fq 'apache2'
 then
 service apache2 restart
 fi
-################### 第三部分 检查并安装JAVA环境 ###################
+################### 第四部分 检查并安装JAVA环境 ###################
 if [ `dpkg -l | grep  default-jdk | wc -l` -eq 0 ]
 then
 	apt -y install default-jdk
 fi
 
-################### 第四部分 启动zookeeper ###################
+################### 第五部分 启动zookeeper ###################
 cd ${currdir}
 ./kafka_2.12-2.6.0/bin/zookeeper-server-start.sh  -daemon ./kafka_2.12-2.6.0/config/zookeeper.properties&
 ##TODO 使用exec调用shell脚本来收集执行结果
 sleep 5
-################### 第五部分 启动kafka     ###################
+################### 第六部分 启动kafka     ###################
 if [ `netstat -tnlp | grep  2181 | wc -l` -eq 0 ]
 then
 #echo '请先启动zookeeper'
@@ -139,7 +144,7 @@ fi
 ./kafka_2.12-2.6.0/bin/kafka-server-start.sh -daemon ./kafka_2.12-2.6.0/config/server.properties&
 
 sleep 5
-################### 第六部分 启动spark     ###################
+################### 第七部分 启动spark     ###################
 if [ `netstat -tnlp | grep  9092 | wc -l` -eq 0 ]
 then
 #echo '请先启动kafka'
