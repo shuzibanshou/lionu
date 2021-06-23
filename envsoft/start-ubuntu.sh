@@ -85,14 +85,19 @@ make && make install
 php_version=`php -r 'echo PHP_VERSION;' |  grep -o '^[[:digit:]].[[:digit:]]'`
 #获取php扩展路径
 php_extension_dir=`php-config --extension-dir`
-echo ${php_extension_dir}
-exit
 #写入apache2 / cli / fpm 三种类型的php.ini
-
-#扩展配置写入php.ini
-if [ `grep "extension=/usr/lib64/php/modules/rdkafka.so" /etc/php.ini | wc -l` -eq 0 ]
- then
-	echo -e "\n[rdkafka]\nextension=/usr/lib64/php/modules/rdkafka.so" >> /etc/php.ini
+#TODO 循环写入
+if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
+then
+	echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/apache2/php.ini
+fi
+if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
+then
+	echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
+fi
+if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
+then
+	echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/fpm/php.ini
 fi
 #重启php-fpm和webserver httpd
 #####kill -SIGUSR2 `cat /var/run/php-fpm.pid`
@@ -106,20 +111,30 @@ then
 	apt -y install php-zip 
 fi
 
-#
-if [ `grep "extension=/usr/lib64/php/modules/zip.so" /etc/php.ini | wc -l` -eq 0 ]
- then
-	echo -e "\n[rdkafka]\nextension=/usr/lib64/php/modules/zip.so" >> /etc/php.ini
+#写入apache2 / cli / fpm 三种类型的php.ini
+#TODO 循环写入
+if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
+then
+	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/apache2/php.ini
 fi
+if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
+then
+	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/cli/php.ini
+fi
+if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
+then
+	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/fpm/php.ini
+fi
+
 #重启php-fpm和webserver httpd
 #kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
-if service --status-all | grep -Fq 'php-fpm'
+if service --status-all | grep 'php${php_version}-fpm'
 then
-service php-fpm restart
+	service php${php_version}-fpm restart
 fi
-if service --status-all | grep -Fq 'apache2'
+if service --status-all | grep 'apache2'
 then
-service apache2 restart
+	service apache2 restart
 fi
 ################### 第四部分 检查并安装JAVA环境 ###################
 if [ `dpkg -l | grep  default-jdk | wc -l` -eq 0 ]
