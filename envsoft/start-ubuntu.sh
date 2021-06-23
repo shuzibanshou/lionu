@@ -87,22 +87,30 @@ php_version=`php -r 'echo PHP_VERSION;' |  grep -o '^[[:digit:]].[[:digit:]]'`
 php_extension_dir=`php-config --extension-dir`
 #写入apache2 / cli / fpm 三种类型的php.ini
 #TODO 循环写入
-if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
+if [ -f /etc/php/${php_version}/apache2/php.ini ]
 then
-	echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/apache2/php.ini
+	if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
+	then
+		echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/apache2/php.ini
+	fi
 fi
-if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
+if [ -f /etc/php/${php_version}/cli/php.ini ]
 then
-	echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
+	if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
+	then
+		echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
+	fi
 fi
-if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
+if [ -f /etc/php/${php_version}/fpm/php.ini ]
 then
-	echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/fpm/php.ini
+	if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
+	then
+		echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/fpm/php.ini
+	fi
 fi
 #重启php-fpm和webserver httpd
 #####kill -SIGUSR2 `cat /var/run/php-fpm.pid`
 #kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
-#service httpd restart
 
 ################### 第三部分 检查并安装php-zip ###################
 
@@ -113,18 +121,18 @@ fi
 
 #写入apache2 / cli / fpm 三种类型的php.ini
 #TODO 循环写入
-if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
-then
-	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/apache2/php.ini
-fi
-if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
-then
-	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/cli/php.ini
-fi
-if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
-then
-	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/fpm/php.ini
-fi
+#if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
+#then
+#	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/apache2/php.ini
+#fi
+#if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
+#then
+#	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/cli/php.ini
+#fi
+#if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
+#then
+#	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/fpm/php.ini
+#fi
 
 #重启php-fpm和webserver httpd
 #kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
