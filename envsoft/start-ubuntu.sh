@@ -9,7 +9,7 @@ then
     exit 1
 fi
 
-################### 第0部分 获取Linux发行版包管理器 ###################
+################### 第0部分 判断Linux的发行版 ###################
 pkg=""
 get_release_pkg(){
 	if [[ $(cat /proc/version | grep -i "Red Hat") != "" ]]
@@ -24,7 +24,10 @@ get_release_pkg(){
 	fi
 }
 get_release_pkg
-
+if [[ ${pkg} == "yum" ]]
+then
+	
+	
 ################### 第一部分 检查并安装php扩展rdkafka ###################
 
 #当前执行脚本的绝对路径
