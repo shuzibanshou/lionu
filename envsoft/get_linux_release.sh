@@ -17,7 +17,7 @@ get_release_pkg(){
 get_release_pkg
 if [ ${pkg} == "yum" ]
 then
-	if [ `rpm -qa | grep httpd | wc -l` -eq 0 ] || [ `rpm -qa | grep nginx | wc -l` -eq 0 ]
+	if [ `rpm -qa | grep httpd | wc -l` -eq 0 ] && [ `rpm -qa | grep nginx | wc -l` -eq 0 ]
 	then
 		echo "还未安装任何 Web Server,请先安装 Apache 或者 Nginx"
 		exit 1
@@ -28,7 +28,7 @@ then
 	fi
 elif [ ${pkg} == "apt" ]
 then
-	if [ `dpkg -l | grep apache2 | wc -l` -eq 0 ] || [ `dpkg -l | grep nginx | wc -l` -eq 0 ]
+	if [ `dpkg -l | grep apache2 | wc -l` -eq 0 ] && [ `dpkg -l | grep nginx | wc -l` -eq 0 ]
 	then
 		echo "还未安装任何 Web Server,请先安装 Apache 或者 Nginx"
 		exit 1
