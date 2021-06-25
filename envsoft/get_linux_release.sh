@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #检测linux发行版
 
 pkg=""
