@@ -232,7 +232,7 @@ then
 		fi
 	fi
 	#重启php-fpm和webserver httpd
-	if service --status-all | grep 'php${php_version}-fpm'
+	if service --status-all | grep php${php_version}-fpm
 	then
 		service php${php_version}-fpm restart
 	fi
