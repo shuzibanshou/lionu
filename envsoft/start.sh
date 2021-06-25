@@ -214,21 +214,21 @@ then
 	then
 		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
 		then
-			echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/apache2/php.ini
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/apache2/php.ini
 		fi
 	fi
 	if [ -f /etc/php/${php_version}/cli/php.ini ]
 	then
 		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
 		then
-			echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
 		fi
 	fi
 	if [ -f /etc/php/${php_version}/fpm/php.ini ]
 	then
 		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
 		then
-			echo "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/fpm/php.ini
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/fpm/php.ini
 		fi
 	fi
 	#重启php-fpm和webserver httpd
@@ -280,7 +280,7 @@ then
 	then 
 		cat ~/.ssh/id_rsa.spark.pub >> ~/.ssh/authorized_keys
 		##追加config配置文件 如果config文件不存在 会自动新建
-		echo "\nHost localhost\nIdentityFile ~/.ssh/id_rsa.spark\nUser root\n"	>> ~/.ssh/config
+		echo -e "\nHost localhost\nIdentityFile ~/.ssh/id_rsa.spark\nUser root\n"	>> ~/.ssh/config
 	else
 		echo '公钥文件不存在'
 		exit 11
