@@ -4,20 +4,7 @@
 #重启php-fpm和webserver httpd
 #####kill -SIGUSR2 `cat /var/run/php-fpm.pid`
 #####kill -USR2 $(ps -aux | grep php-fpm:\ master\ process | awk '{print $2}' | head -n 1)
-#写入apache2 / cli / fpm 三种类型的php.ini
-#TODO 循环写入
-#if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/apache2/php.ini | wc -l` -eq 0 ]
-#then
-#	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/apache2/php.ini
-#fi
-#if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/cli/php.ini | wc -l` -eq 0 ]
-#then
-#	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/cli/php.ini
-#fi
-#if [ `grep "extension=${php_extension_dir}/zip.so" /etc/php/${php_version}/fpm/php.ini | wc -l` -eq 0 ]
-#then
-#	echo "\n[rdkafka]\nextension=${php_extension_dir}/zip.so" >> /etc/php/${php_version}/fpm/php.ini
-#fi
+
 
 if [ `whoami` != 'root' ]
 then
@@ -64,7 +51,15 @@ then
 	fi
 elif [ ${pkg} == "zypper" ]
 then
-	echo ""
+	if [ `rpm -qa | grep apache2 | wc -l` -eq 0 ] && [ `rpm -qa | grep nginx | wc -l` -eq 0 ]
+	then
+		echo "还未安装任何 Web Server,请先安装 Apache 或者 Nginx"
+		exit 1
+	elif [ `rpm -qa | grep php | wc -l` -eq 0 ]
+	then
+		echo "还未安装 PHP,请先安装 PHP"
+		exit 1
+	fi
 else
 	echo "未能识别该Linux发行版"
 	exit 1
@@ -124,6 +119,10 @@ then
 	then
 		apt -y install make
 	fi
+	if [ `dpkg -l | grep gcc-c++ | wc -l` -eq 0 ]
+	then
+		apt -y install gcc-c++
+	fi
 	if [ `dpkg -l | grep php-dev | wc -l` -eq 0 ]
 	then
 		apt -y install php-dev
@@ -138,7 +137,38 @@ then
 	fi
 elif [ ${pkg} == "zypper" ]
 then
-	echo "todo"
+	if [ `rpm -qa | grep re2c | wc -l` -eq 0 ]
+	then
+		zypper -n install re2c
+	fi
+	if [ `rpm -qa | grep unzip | wc -l` -eq 0 ]
+	then
+		zypper -n install unzip
+	fi
+	if [ `rpm -qa | grep ^make | wc -l` -eq 0 ]
+	then
+		zypper -n install make
+	fi
+	if [ `rpm -qa | grep gcc-c++ | wc -l` -eq 0 ]
+	then
+		zypper -n install gcc-c++
+	fi
+	if [ `rpm -qa | grep php-devel | wc -l` -eq 0 ]
+	then
+		zypper -n install php-devel
+	fi
+	if [ `rpm -qa | grep  php-pecl-zip | wc -l` -eq 0 ]
+	then
+		zypper -n install php-zip
+	fi
+	if [ `rpm -qa | grep  java | wc -l` -eq 0 ]
+	then
+		zypper -n install java
+	fi
+	if [ `rpm -qa | grep  java-devel | wc -l` -eq 0 ]
+	then
+		zypper -n install java-devel
+	fi
 fi
 	
 ################### 第二部分 编译librdkafka基础库和php扩展rdkafka ###################
@@ -273,14 +303,14 @@ exit 3
 fi
 
 ##配置密钥并追加公钥以便 Spark 免密启动
-if [ ! -f ~/.ssh/id_rsa.spark ]
+if [ ! -f ~/.ssh/id_rsa.spark.lionsu ]
 then
-	ssh-keygen -t rsa -f ~/.ssh/id_rsa.spark -q -N ''
-	if [ -f ~/.ssh/id_rsa.spark.pub ]
+	ssh-keygen -t rsa -f ~/.ssh/id_rsa.spark.lionsu -q -N ''
+	if [ -f ~/.ssh/id_rsa.spark.lionsu.pub ]
 	then 
-		cat ~/.ssh/id_rsa.spark.pub >> ~/.ssh/authorized_keys
+		cat ~/.ssh/id_rsa.spark.lionsu.pub >> ~/.ssh/authorized_keys
 		##追加config配置文件 如果config文件不存在 会自动新建
-		echo -e "\nHost localhost\nIdentityFile ~/.ssh/id_rsa.spark\nUser root\n"	>> ~/.ssh/config
+		echo -e "\nHost localhost\nIdentityFile ~/.ssh/id_rsa.spark.lionsu\nUser root\n"	>> ~/.ssh/config
 	else
 		echo '公钥文件不存在'
 		exit 11
