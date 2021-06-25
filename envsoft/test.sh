@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ `service --status-all | grep 'php7.0-fpm' | wc -l` -gt 0 ]
+if service --status-all | grep 'php7.0-fpm'
 then
 	echo 'abc'
-	service php${php_version}-fpm restart
+	service php7.0-fpm restart
 fi
