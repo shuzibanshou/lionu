@@ -285,9 +285,9 @@ then
 	fi
 	if [ -f /etc/php${php_big_version}/cli/php.ini ]
 	then
-		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php${php_version}/cli/php.ini | wc -l` -eq 0 ]
+		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php${php_big_version}/cli/php.ini | wc -l` -eq 0 ]
 		then
-			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php${php_big_version}/cli/php.ini
 		fi
 	fi
 	#重启php-fpm和webserver httpd
