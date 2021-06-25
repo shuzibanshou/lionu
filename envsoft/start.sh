@@ -272,7 +272,33 @@ then
 	fi
 elif [ ${pkg} == "zypper" ]
 then
-	echo "todo"
+	#获取php大版本号
+	php_big_version=`php -r 'echo PHP_VERSION;' |  grep -o '^[[:digit:]]'`
+	#获取php扩展路径
+	php_extension_dir=`php-config --extension-dir`
+	if [ -f /etc/php${php_big_version}/apache2/php.ini ]
+	then
+		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php${php_big_version}/apache2/php.ini | wc -l` -eq 0 ]
+		then
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php${php_big_version}/apache2/php.ini
+		fi
+	fi
+	if [ -f /etc/php${php_big_version}/cli/php.ini ]
+	then
+		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php${php_version}/cli/php.ini | wc -l` -eq 0 ]
+		then
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php/${php_version}/cli/php.ini
+		fi
+	fi
+	#重启php-fpm和webserver httpd
+	if service --status-all | grep php-fpm
+	then
+		service php-fpm restart
+	fi
+	if service --status-all | grep 'apache2'
+	then
+		service apache2 restart
+	fi
 fi
 
 
