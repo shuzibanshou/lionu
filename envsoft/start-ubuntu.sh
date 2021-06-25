@@ -3,15 +3,31 @@
 #假定所有支持软件(包括但不限于apache php等)都以apt方式提前安装
 #自行编译安装支持软件(包括但不限于apache php等)不在此脚本支持范围
 
-
-################### 第一部分 检查并安装php扩展rdkafka ###################
-
 if [ `whoami` != 'root' ]
 then
     echo "编译需要root用户"
     exit 1
 fi
 
+################### 第0部分 获取Linux发行版包管理器 ###################
+pkg=""
+get_release_pkg(){
+	if [[ $(cat /proc/version | grep -i "Red Hat") != "" ]]
+	then
+		pkg="yum"
+	elif [[ $(cat /proc/version | grep -i "Ubuntu" ) != ""  ||  $(cat /proc/version | grep -i "Debian" ) != "" ]]
+	then
+		pkg="apt"
+	elif [[ $(cat /proc/version | grep -i "SUSE") != "" ]]
+	then
+		pkg="zypper"
+	fi
+}
+get_release_pkg
+
+################### 第一部分 检查并安装php扩展rdkafka ###################
+
+#当前执行脚本的绝对路径
 currdir=$(cd $(dirname $0); pwd)
 #删除旧文件
 if [ -d '/tmp/rdkafka' ] || [ -f '/tmp/rdkafka']
@@ -197,18 +213,3 @@ fi
 ./spark-2.4.7-bin-hadoop2.7/sbin/start-all.sh
 
 
-#########获取Linux发行版包管理器的函数
-get_release_pkg(){
-	pkg=""
-	if [[ $(cat /proc/version | grep -i "Red Hat") != "" ]]
-	then
-		pkg="yum"
-	elif [[ $(cat /proc/version | grep -i "Ubuntu" ) != ""  ||  $(cat /proc/version | grep -i "Debian" ) != "" ]]
-	then
-		pkg="apt"
-	elif [[ $(cat /proc/version | grep -i "SUSE") != "" ]]
-	then
-		pkg="zypper"
-	fi
-	return ${pkg}
-}
