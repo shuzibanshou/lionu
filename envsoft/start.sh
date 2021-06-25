@@ -290,6 +290,19 @@ then
 			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php${php_big_version}/cli/php.ini
 		fi
 	fi
+	if [ -f /etc/php${php_big_version}/fpm/php.ini ]
+	then
+		if [ `grep "extension=${php_extension_dir}/rdkafka.so" /etc/php${php_big_version}/fpm/php.ini | wc -l` -eq 0 ]
+		then
+			echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php${php_big_version}/fpm/php.ini
+		fi
+	elif [ -d /etc/php${php_big_version}/conf.d/ ]
+	then
+		echo -e "\n[rdkafka]\nextension=${php_extension_dir}/rdkafka.so" >> /etc/php${php_big_version}/conf.d/rdkafka.ini
+	else
+		echo "rdkafka扩展配置写入失败"
+		exit 20
+	fi
 	#重启php-fpm和webserver httpd
 	if service --status-all | grep php-fpm
 	then
