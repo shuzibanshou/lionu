@@ -320,16 +320,13 @@ cd ${currdir}
 netstat="netstat"
 if [ ${pkg} == "zypper" ]
 then
-	if [ `rpm -qa | grep netstat | wc -l` -eq 0 ]
-	then 
-		netstat="ss"
-	fi
+	netstat="ss"
 fi
 ./kafka_2.12-2.6.0/bin/zookeeper-server-start.sh  -daemon ./kafka_2.12-2.6.0/config/zookeeper.properties&
 ##TODO 使用exec调用shell脚本来收集执行结果
 sleep 5
 ################### 第五部分 启动kafka     ###################
-if [ `${netstat} -tnlp | grep  2181 | wc -l` -eq 0 ]
+if [ `${netstat} -tnlp | grep  ":2181 " | wc -l` -eq 0 ]
 then
 #echo '请先启动zookeeper'
 #如果zookeeper启动失败 则使用普通模式再启动一次以便输出启动日志
@@ -341,7 +338,7 @@ fi
 
 sleep 5
 ################### 第六部分 启动spark     ###################
-if [ `${netstat} -tnlp | grep  9092 | wc -l` -eq 0 ]
+if [ `${netstat} -tnlp | grep  ":9092 " | wc -l` -eq 0 ]
 then
 #echo '请先启动kafka'
 #如果kafka启动失败 则使用普通模式再启动一次以便输出启动日志
