@@ -230,8 +230,14 @@ then
 	then
 		echo -e "\n[rdkafka]\nextension=/usr/lib64/php/modules/rdkafka.so" >> /etc/php.ini
 	fi
-	service php-fpm restart
-	service httpd restart
+	if [ `ps -aux | grep php-fp[m] | wc -l` -gt 0 ]
+	then
+		service php-fpm restart
+	fi
+	if [ `ps -aux | grep /http[d] | wc -l` -gt 0 ]
+	then
+		service httpd restart
+	fi
 elif [ ${pkg} == "apt" ]
 then
 	#获取php版本
