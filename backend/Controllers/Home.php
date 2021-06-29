@@ -1,4 +1,8 @@
 <?php 
+
+/**
+ * 默认控制器
+ */
 namespace App\Controllers;
 
 use CodeIgniter\Controller;

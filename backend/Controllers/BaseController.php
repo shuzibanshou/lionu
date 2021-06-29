@@ -62,9 +62,31 @@ class BaseController extends Controller
 	 * 检测是否已安装
 	 */
 	private function ifInstall(){
-		if(!file_exists(ROOTPATH.'installed')){
-		    header('Location:/install/index');
+	    $install_file_name = ROOTPATH . 'installed';
+	    if(!file_exists($install_file_name)){
+		    echo '安装文件丢失,请手动生成';
 		    exit();
+		} else {
+		    $install_file_content = file_get_contents($install_file_name);
+		    if (! empty($install_file_content)) {
+		        if ($install_file_content == 'ok') {
+		            echo '您已经完成了安装，若您需要重新安装，请先清空根目录下installed文件的内容及删除数据库表';
+		            exit();
+		        } else {
+		            $install_file_content = intval($install_file_content);
+		            if(in_array($install_file_content, [1,2,3])){
+		                header('Location:/install/index?step=' . $install_file_content);
+		                exit();
+		            } else {
+		                echo '参数错误';
+		                exit;
+		            }
+		        }
+		    } else {
+		        // 还未进行安装
+		        header('Location:/install/index?step=1');
+		        exit();
+		    }
 		}
 	}
 }
