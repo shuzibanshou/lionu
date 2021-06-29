@@ -35,7 +35,7 @@ class BaseController extends Controller
 	{
 		// Do Not Edit This Line
 		parent::initController($request, $response, $logger);
-		$this->ifReWrite();
+		//$this->ifReWrite();
 		$this->ifInstall();
 		//--------------------------------------------------------------------
 		// Preload any models, libraries, etc, here.
@@ -46,6 +46,7 @@ class BaseController extends Controller
 	
 	/**
 	 * 检测webServer Rewrite功能是否可用
+	 * TODO 服务器没有域名的host，需要改进
 	 */
 	private function ifReWrite(){
 	    $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
