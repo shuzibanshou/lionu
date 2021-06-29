@@ -360,8 +360,8 @@ class Install extends Controller
         
         try {
             unset($custom['database']);
-            dump($custom);
-            exit;
+            //dump($custom);
+
             $db = \Config\Database::connect($custom);
             $db->connect();
             $this->checkMySQLEnv($db);
