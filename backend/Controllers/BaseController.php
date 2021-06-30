@@ -68,11 +68,8 @@ class BaseController extends Controller
 		    exit();
 		} else {
 		    $install_file_content = file_get_contents($install_file_name);
-		    if (! empty($install_file_content)) {
-		        if ($install_file_content == 'ok') {
-		            echo '您已经完成了安装，若您需要重新安装，请先清空根目录下installed文件的内容及删除数据库表';
-		            exit();
-		        } else {
+		    if (!empty($install_file_content)) {
+		        if ($install_file_content !== 'ok') {
 		            $install_file_content = intval($install_file_content);
 		            if(in_array($install_file_content, [1,2,3])){
 		                header('Location:/install/index?step=' . $install_file_content);
