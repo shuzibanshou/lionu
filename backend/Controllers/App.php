@@ -15,12 +15,7 @@ class App extends NeedloginController
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES); // todo
         $app_step = isset($post['app_step']) ? intval($post['app_step']) : '';
         try{
-            $db = \Config\Database::connect();
-            echo 'abc';
-            exit;
-        } catch (\Exception $e){
-            echo $e->getMessage();
-        }
+        $db = \Config\Database::connect();
         // dump($db);
         //$db->setDatabase('test');
         if ($app_step == 3) {
@@ -62,7 +57,9 @@ class App extends NeedloginController
                 ]
             ], JSON_UNESCAPED_UNICODE);
         }
-        
+        } catch (\Exception $e){
+            echo $e->getMessage();
+        }
     }
 
     public function add()
