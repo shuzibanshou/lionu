@@ -34,11 +34,12 @@ class App extends NeedloginController
             $offset = ($page - 1) * $pageSize;
             
             $sql = "SELECT id,app_name,package_name,app_os,app_step,app_event,add_time,update_time FROM u_app WHERE app_status=1 ORDER BY add_time DESC LIMIT " . $offset . ',' . $pageSize;
-            var_dump($db);
-            exit;
+            try{
             $query = $db->query($sql);
-            var_dump($query);
-            exit;
+            } catch (\Exception $e){
+                echo $e->getMessage();
+                exit;
+            }
             $apps = $query->getResultArray();
             
             if (is_array($apps) && count($apps) > 0) {
