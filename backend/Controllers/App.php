@@ -16,6 +16,8 @@ class App extends NeedloginController
         $app_step = isset($post['app_step']) ? intval($post['app_step']) : '';
         try{
             $db = \Config\Database::connect();
+            echo 'abc';
+            exit;
         } catch (\Exception $e){
             echo $e->getMessage();
         }
