@@ -1,9 +1,9 @@
 <?php namespace Config;
 
-define( 'hostname', '59.110.142.191' );
-define( 'username', 'root' );
-define( 'password', 'QWERasdf1234' );
-define( 'database', 'lionsu-demo' );
+define( 'hostname', '' );
+define( 'username', '' );
+define( 'password', '' );
+define( 'database', '' );
 define( 'port', '3306' );
 
 /**
