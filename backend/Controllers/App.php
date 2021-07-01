@@ -14,7 +14,6 @@ class App extends NeedloginController
     {
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES); // todo
         $app_step = isset($post['app_step']) ? intval($post['app_step']) : '';
-        try{
         $db = \Config\Database::connect();
         // dump($db);
         //$db->setDatabase('test');
@@ -35,6 +34,8 @@ class App extends NeedloginController
             $offset = ($page - 1) * $pageSize;
             
             $sql = "SELECT id,app_name,package_name,app_os,app_step,app_event,add_time,update_time FROM u_app WHERE app_status=1 ORDER BY add_time DESC LIMIT " . $offset . ',' . $pageSize;
+            echo $sql;
+            exit;
             $query = $db->query($sql);
             $apps = $query->getResultArray();
             
@@ -56,9 +57,6 @@ class App extends NeedloginController
                     'apps' => $apps
                 ]
             ], JSON_UNESCAPED_UNICODE);
-        }
-        } catch (\Exception $e){
-            echo $e->getMessage();
         }
     }
 
