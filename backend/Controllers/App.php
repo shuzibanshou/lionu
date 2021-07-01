@@ -35,7 +35,7 @@ class App extends NeedloginController
             
             $sql = "SELECT id,app_name,package_name,app_os,app_step,app_event,add_time,update_time FROM u_app WHERE app_status=1 ORDER BY add_time DESC LIMIT " . $offset . ',' . $pageSize;
             try{
-            $query = $db->query($sql);
+            $query = $db->query("SELECT * WHERE 1=1");
             } catch (\Exception $e){
                 echo $e->getMessage();
                 exit;
