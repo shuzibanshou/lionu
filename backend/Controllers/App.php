@@ -35,9 +35,10 @@ class App extends NeedloginController
             
             $sql = "SELECT id,app_name,package_name,app_os,app_step,app_event,add_time,update_time FROM u_app WHERE app_status=1 ORDER BY add_time DESC LIMIT " . $offset . ',' . $pageSize;
             $query = $db->query($sql);
-            $apps = $query->getResultArray();
-            var_dump($apps);
+            var_dump($query);
             exit;
+            $apps = $query->getResultArray();
+            
             if (is_array($apps) && count($apps) > 0) {
                 foreach ($apps as &$app) {
                     $app['app_event'] = json_decode($app['app_event'], true);
