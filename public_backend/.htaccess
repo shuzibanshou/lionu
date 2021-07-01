@@ -1,4 +1,4 @@
-# Disable directory browsing
+﻿# Disable directory browsing
 Options All -Indexes
 
 # ----------------------------------------------------------------------
@@ -40,7 +40,7 @@ Options All -Indexes
 <IfModule !mod_rewrite.c>
     # If we don't have mod_rewrite installed, all 404's
     # can be sent to index.php, and everything works as normal.
-    ErrorDocument 404 请检查Web Server的ReWrite模块是否已安装并加载，如果是Apache，请检查<Directory "/var/www/html">配置节点的AllowOverride配置项是否设置为All
+    ErrorDocument 404 /no_rewrite.html
 </IfModule>
 
 # Disable server signature start
