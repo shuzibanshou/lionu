@@ -14,7 +14,8 @@ class App extends NeedloginController
     {
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES); // todo
         $app_step = isset($post['app_step']) ? intval($post['app_step']) : '';
-        
+        echo 'abc';
+        exit;
         $db = \Config\Database::connect();
         // dump($db);
         //$db->setDatabase('test');
