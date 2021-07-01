@@ -14,9 +14,11 @@ class App extends NeedloginController
     {
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES); // todo
         $app_step = isset($post['app_step']) ? intval($post['app_step']) : '';
-        echo 'abc';
-        exit;
-        $db = \Config\Database::connect();
+        try{
+            $db = \Config\Database::connect();
+        } catch (\Exception $e){
+            echo $e->getMessage();
+        }
         // dump($db);
         //$db->setDatabase('test');
         if ($app_step == 3) {
