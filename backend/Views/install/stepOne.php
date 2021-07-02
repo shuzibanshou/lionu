@@ -63,7 +63,7 @@
             </tr>
             <tr>
                 <th scope="row"><label for="dbname">数据库名</label></th>
-                <td><input class="dbconf conf required" name="dbname" id="dbname" type="text" size="25" value="lion-u" data-valid="isNonEmpty||between:1-50" data-error="<i class='icon-tips'></i>您还没有输入数据库名||<i class='icon-tips'></i>请输入合适的长度" />
+                <td><input class="dbconf conf required" name="dbname" id="dbname" type="text" size="25" value="lionsu" data-valid="isNonEmpty||between:1-50" data-error="<i class='icon-tips'></i>您还没有输入数据库名||<i class='icon-tips'></i>请输入合适的长度" />
 				<label class="focus valid"></label>
 			</td>
                 <td id="dbname-desc"></td>
