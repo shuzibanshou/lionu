@@ -30,7 +30,6 @@ class Plan extends BaseController
         $filter_params = array_filter($filter_params);
         
         $db = \Config\Database::connect();
-        //$db->setDatabase('test');
         $plans = $this->select($db, 'u_plan', $filter_params,'*','',$limit);
         //TODO 应用信息和渠道信息从redis中获取
         $apps = $this->select($db, 'u_app',[],'id,app_name,app_os','id');
@@ -41,7 +40,7 @@ class Plan extends BaseController
                 $plan['app_os'] = $apps[$plan['app_id']]['app_os'];
                 $plan['app_name'] = $apps[$plan['app_id']]['app_name'];
                 $plan['channel_name'] = $channels[$plan['channel_id']]['channel_name'];
-                $plan['click_monitor_link'] = SDKDOMAIN.$plan['click_monitor_link'].'&plan_id='.$plan['id'];
+                $plan['click_monitor_link'] = $plan['click_monitor_link'].'&plan_id='.$plan['id'];
             }
         }
         //获取计划总条数

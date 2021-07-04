@@ -464,7 +464,7 @@ class Install extends Controller
         $addConfSql = "INSERT INTO `u_conf` (`conf_key`, `conf_value`) VALUES ('SDKDOMAIN', '" . SDKDOMAIN . "');";
         $db->query($addConfSql);
         $byte_click_monitor_link_tpl = '{"android":"aid=__AID__&cid=__CID__&imei=__IMEI__&mac=__MAC__&oaid=__OAID__&androidid=__ANDROIDID__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__",
-                                        "ios":"aid=__AID__&cid=__CID__&idfa=__IDFA__&mac=__MAC__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__"';
+                                        "ios":"aid=__AID__&cid=__CID__&idfa=__IDFA__&mac=__MAC__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__"}';
         //$tencent_click_monitor_link_tpl = '';
         //$baidu_click_monitor_link_tpl = '';
         $add_time = date('Y-m-d H:i:s',time());
@@ -555,7 +555,7 @@ class Install extends Controller
           `app_id` int(11) NOT NULL COMMENT '应用ID',
           `channel_id` mediumint(9) NOT NULL COMMENT '渠道ID',
           `add_time` datetime NOT NULL COMMENT '添加时间',
-          `click_monitor_link` varchar(200) NOT NULL COMMENT '点击监测链接',
+          `click_monitor_link` varchar(1000) NOT NULL COMMENT '点击监测链接',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=23 ;
 
