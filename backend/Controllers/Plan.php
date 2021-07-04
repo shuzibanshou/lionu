@@ -187,7 +187,7 @@ class Plan extends BaseController
             case 2:
                 return 'IOS应用';
                 break;
-            case 3:
+            /* case 3:
                 return 'H5应用';
                 break;
             case 4:
@@ -195,6 +195,9 @@ class Plan extends BaseController
                 break;
             case 4:
                 return 'Unity';
+                break; */
+            default:
+                return 'Android应用';
                 break;
         }
     }
