@@ -458,11 +458,17 @@ class Install extends Controller
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
-        // 数据表写入数据
+        // 数据表写入初始化数据
         $addUserSql = "INSERT INTO `u_user` (`username`, `pwd`, `add_time`) VALUES ('" . SYSUSER . "', '" . SYSPWD . "', '" . date('Y-m-d H:i:s', time()) . "');";
         $db->query($addUserSql);
         $addConfSql = "INSERT INTO `u_conf` (`conf_key`, `conf_value`) VALUES ('SDKDOMAIN', '" . SDKDOMAIN . "');";
         $db->query($addConfSql);
+        $byte_click_monitor_link_tpl = '{"android":"aid=__AID__&cid=__CID__&imei=__IMEI__&mac=__MAC__&oaid=__OAID__&androidid=__ANDROIDID__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__",
+                                        "ios":"aid=__AID__&cid=__CID__&idfa=__IDFA__&mac=__MAC__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__"';
+        //$tencent_click_monitor_link_tpl = '';
+        //$baidu_click_monitor_link_tpl = '';
+        $add_time = date('Y-m-d H:i:s',time());
+        $addChannelSql = "INSERT INTO `u_channel`(`channel_name`, `click_monitor_link_tpl`, `add_time`) VALUES ('头条信息流',".$byte_click_monitor_link_tpl.",".$add_time.")";
         
         // 写安装文件
         try {
