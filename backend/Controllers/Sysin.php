@@ -44,8 +44,8 @@ class Sysin extends NeedloginController
                     //扩展未安装 php调用shell脚本方式在yum安装带上-y参数会产生Service Unavailable错误 暂没有找到解决方案
                     //$install_zip_sh = ROOTPATH . 'envsoft/compile_install_zip.sh > /dev/null';
                     //exec('sudo '.$install_zip_sh, $install_zip_result, $install_zip_status);
-                    $install_zip_sh = ROOTPATH . 'envsoft/compile_install_zip.sh';
-                    _json(['code' => 199,'msg' => "系统还未安装 php-zip 扩展,请使用root用户手动执行{$install_zip_sh}进行安装"], 1);
+                    $install_zip_sh = ROOTPATH . 'envsoft/start.sh';
+                    _json(['code' => 199,'msg' => "系统还未安装 php-zip 扩展,请使用root用户手动执行{$install_zip_sh}进行系统初始化"], 1);
                 }
             }
             
