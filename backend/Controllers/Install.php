@@ -538,7 +538,7 @@ class Install extends Controller
         CREATE TABLE IF NOT EXISTS `u_channel` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `channel_name` varchar(50) NOT NULL COMMENT '渠道名称',
-          `click_monitor_link_tpl` varchar(200) NOT NULL COMMENT '点击监测链接模板',
+          `click_monitor_link_tpl` varchar(1000) NOT NULL COMMENT '点击监测链接模板',
           `add_time` datetime NOT NULL COMMENT '添加时间',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=2 ;

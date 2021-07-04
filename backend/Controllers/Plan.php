@@ -153,7 +153,6 @@ class Plan extends BaseController
      */
     public function addInit(){
         $db = \Config\Database::connect();
-        //$db->setDatabase('test');
         //TODO 应用信息和渠道信息从redis中获取
         $_apps = [];
         $apps = $this->select($db, 'u_app',[],'id AS app_id,app_name,app_os');
