@@ -197,7 +197,7 @@ class Receive extends BaseController
 	 * 接收设备启动消息
 	 */
 	public function launch(){
-	    /* $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();
 	    
@@ -219,9 +219,9 @@ class Receive extends BaseController
 	        $len = $rk->getOutQLen();
 	        $rk->poll(10);
 	    }
-	    _json(array('code'=>200,'msg'=>'ok'),1); */
+	    _json(array('code'=>200,'msg'=>'ok'),1);
 	    
-	    $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    /* $deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    try{
     	    $config = ProducerConfig::getInstance();
     	    $config->setMetadataRefreshIntervalMs(10000);
@@ -245,7 +245,7 @@ class Receive extends BaseController
     	    _json(array('code'=>200,'msg'=>'ok'),1);
 	    } catch (\Exception $e){
 	        echo $e->getMessage();
-	    }
+	    } */
 	}
 	
 	/**
