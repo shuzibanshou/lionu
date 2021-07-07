@@ -386,9 +386,6 @@ class Install extends Controller
             _json(['code' => 106,'msg' => '连接redis服务器失败: ' . $errstr],1);
         }
         
-        /*if (!$redis){
-            _json(['code' => 106,'msg' => '连接redis服务器失败: ' . $errstr],1);
-        }*/
 
         // 环境通过检测开始写入配置
         $write_res = $this->step2();
