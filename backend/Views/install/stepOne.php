@@ -56,14 +56,14 @@
         <table class="form-table" role="presentation">
             <tr>
                 <th scope="row"><label for="dbhost">数据库地址</label></th>
-                <td><input class="dbconf conf required" name="dbhost" id="dbhost" type="text" size="25" value="127.0.0.1" data-valid="isNonEmpty||isIP" data-error="<i class='icon-tips'></i>您还没有输入数据库地址||<i class='icon-tips'></i>请输入合法的IP地址" disabled /><label class="focus valid"></label>
+                <td><input class="dbconf conf required" name="dbhost" id="dbhost" type="text" size="25" value="127.0.0.1" data-valid="isNonEmpty||isIP" data-error="<i class='icon-tips'></i>您还没有输入数据库地址||<i class='icon-tips'></i>请输入合法的IP地址" /><label class="focus valid"></label>
                 <p>在使用PDO连接本地MySQL服务时,使用127.0.0.1比localhost有更好的兼容性</p>
                 </td>
                 <td id="dbhost-desc"></td>
             </tr>
             <tr>
                 <th scope="row"><label for="dbname">数据库名</label></th>
-                <td><input class="dbconf conf required" name="dbname" id="dbname" type="text" size="25" value="lionsu" data-valid="isNonEmpty||between:1-50" data-error="<i class='icon-tips'></i>您还没有输入数据库名||<i class='icon-tips'></i>请输入合适的长度" disabled />
+                <td><input class="dbconf conf required" name="dbname" id="dbname" type="text" size="25" value="lionsu" data-valid="isNonEmpty||between:1-50" data-error="<i class='icon-tips'></i>您还没有输入数据库名||<i class='icon-tips'></i>请输入合适的长度" />
 				<label class="focus valid"></label>
 			</td>
                 <td id="dbname-desc"></td>
@@ -89,7 +89,7 @@
         <table class="form-table" role="presentation">
             <tr>
                 <th scope="row"><label for="redishost">Redis 地址</label></th>
-                <td><input class="kafkaconf conf" name="redishost" id="redishost" type="text" aria-describedby="redishost-desc" size="25" value="127.0.0.1" required disabled />
+                <td><input class="redisconf conf" name="redishost" id="redishost" type="text" aria-describedby="redishost-desc" size="25" value="127.0.0.1" required disabled />
                 </td>
                 <td id="redishost-desc"></td>
             </tr>
