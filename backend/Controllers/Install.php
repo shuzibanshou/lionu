@@ -380,10 +380,15 @@ class Install extends Controller
         //测试Redis连接
         $redishost = trim($post['redishost']);
         $redisport = trim($post['redisport']);
-        $redis = stream_socket_client('tcp://'.$redishost.':'.$redisport, $errno, $errstr, 5);
-        if (!$redis){
+        try{
+            $redis = stream_socket_client('tcp://'.$redishost.':'.$redisport, $errno, $errstr, 5);
+        } catch(\Exception $e){
             _json(['code' => 106,'msg' => '连接redis服务器失败: ' . $errstr],1);
         }
+        
+        /*if (!$redis){
+            _json(['code' => 106,'msg' => '连接redis服务器失败: ' . $errstr],1);
+        }*/
 
         // 环境通过检测开始写入配置
         $write_res = $this->step2();
