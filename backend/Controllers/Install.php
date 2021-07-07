@@ -310,7 +310,7 @@ class Install extends Controller
             _json(['code' => 108,'msg' => '该域名没有公网解析或者没有指向量U的安装目录'],1);
         }
 
-	//测试系统配置-SDK域名是否已配置https支持 1s超时则说明域名未部署https
+	    //测试系统配置-SDK域名是否已配置https支持 1s超时则说明域名未部署https
         $sdkDomainUrlHTTPS = 'https://'.$sdkDomain . '/ping/index';
 
         try {
@@ -375,6 +375,14 @@ class Install extends Controller
         }
         if (in_array($dbname, $dbs)) {
             _json(['code' => 105,'msg' => 'database ' . $dbname . ' does exists'], 1);
+        }
+
+        //测试Redis连接
+        $redishost = trim($post['redishost']);
+        $redisport = trim($post['redisport']);
+        $redis = stream_socket_client('tcp://'.$redishost.':'.$redisport, $errno, $errstr, 5);
+        if (!$redis){
+            _json(['code' => 106,'msg' => '连接redis服务器失败: ' . $errstr],1);
         }
 
         // 环境通过检测开始写入配置
