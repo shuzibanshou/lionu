@@ -145,7 +145,7 @@ class Receive extends BaseController
         foreach ($required as $field){
             if(!isset($clickData[$field]) || empty($clickData[$field]) || (strpos($clickData[$field], '_') !== false)){
                 //TODO 参数写入日志
-                _json(['code'=>199,'msg'=>'参数错误'],1);
+                _json(['code'=>199,'msg'=>'iOS点击数据缺少参数'],1);
             }
         }
     }

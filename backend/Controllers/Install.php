@@ -290,55 +290,41 @@ class Install extends Controller
      */
     public function checkConfigAndEnvVersion()
     {
-        /* $curl = curl_init();
-        //设置抓取的url
-        curl_setopt($curl, CURLOPT_URL, 'http://api.lion-u.com/ping/index');
-        //设置头文件的信息作为数据流输出
-        curl_setopt($curl, CURLOPT_HEADER, 0);
-        // 超时设置,以秒为单位
-        curl_setopt($curl, CURLOPT_TIMEOUT, 1);
-        
-        // 超时设置，以毫秒为单位
-        // curl_setopt($curl, CURLOPT_TIMEOUT_MS, 500);
-        $header = array(
-            'Accept: application/json',
-        );
-        // 设置请求头
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-        //设置获取的信息以文件流的形式返回，而不是直接输出。
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        //执行命令
-        $data = curl_exec($curl);
-        
-        // 显示错误信息
-        if (curl_error($curl)) {
-            print "Error: " . curl_error($curl);
-        } else {
-            // 打印返回的内容
-            var_dump($data);
-            curl_close($curl);
-        } */
-    
         $post = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
         // 测试系统配置-SDK域名是否可访问 1s超时则说明域名未进行公网部署
         // 使用file_get_contents获取内容需要加http协议
-        $sdkDomain = (stripos(trim($post['sdkdomain']),'http') !== false) ? trim($post['sdkdomain']) : 'http://'.trim($post['sdkdomain']);
-        $sdkDomainUrl = $sdkDomain . '/ping/index';
+        $sdkDomain = str_replace(array('http://','https://'),'',trim($post['sdkdomain']));
+        $sdkDomainUrlHTTP = 'http://'.$sdkDomain . '/ping/index';
 
         try {
             $opts = array(
                 'http' => array(
                     'method' => "GET",
-                    'timeout' => 10 // 单位秒
+                    'timeout' => 5 // 单位秒
                 )
             );
-            if (file_get_contents($sdkDomainUrl) != 'ok') {
-                _json(['code' => 107,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
+            if (file_get_contents($sdkDomainUrlHTTP) != 'ok') {
+                _json(['code' => 107,'msg' => '该域名没有公网解析或者没有指向量U的安装目录'],1);
             }
         } catch (\Exception $e) {
-            _json(['code' => 108,'msg' => '请填写正确部署的域名,确保该域名已公网解析并指向量U的安装目录'],1);
+            _json(['code' => 108,'msg' => '该域名没有公网解析或者没有指向量U的安装目录'],1);
+        }
+
+	//测试系统配置-SDK域名是否已配置https支持 1s超时则说明域名未部署https
+        $sdkDomainUrlHTTPS = 'https://'.$sdkDomain . '/ping/index';
+
+        try {
+            $opts = array(
+                'http' => array(
+                    'method' => "GET",
+                    'timeout' => 5 // 单位秒
+                )
+            );
+            if (file_get_contents($sdkDomainUrlHTTPS) != 'ok') {
+                _json(['code' => 109,'msg' => '该域名未部署 https '],1);
+            }
+        } catch (\Exception $e) {
+            _json(['code' => 111,'msg' => '该域名未部署 https '],1);
         }
         
         // 测试数据库连接
@@ -463,9 +449,11 @@ class Install extends Controller
         $db->query($addUserSql);
         $addConfSql = "INSERT INTO `u_conf` (`conf_key`, `conf_value`) VALUES ('SDKDOMAIN', '" . SDKDOMAIN . "');";
         $db->query($addConfSql);
-        $byte_click_monitor_link_tpl = '{"android":"aid=__AID__&cid=__CID__&imei=__IMEI__&mac=__MAC__&oaid=__OAID__&androidid=__ANDROIDID__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__",
-                                        "ios":"aid=__AID__&cid=__CID__&idfa=__IDFA__&mac=__MAC__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__"}';
-        //$tencent_click_monitor_link_tpl = '';
+	   //头条监测链接模板
+        $byte_click_monitor_link_tpl = '{"android":"aid=__AID__&cid=__CID__&imei=__IMEI__&mac=__MAC__&oaid=__OAID__&androidid=__ANDROIDID__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__","ios":"aid=__AID__&cid=__CID__&idfa=__IDFA__&mac=__MAC__&os=__OS__&TIMESTAMP=__TS__&callback_url=__CALLBACK_URL__"}';
+        //广点通监测链接模板
+	//$tencent_click_monitor_link_tpl = '';
+	//百度信息流监测链接模板
         //$baidu_click_monitor_link_tpl = '';
         $add_time = date('Y-m-d H:i:s',time());
         $addChannelSql = "INSERT INTO `u_channel`(`channel_name`, `click_monitor_link_tpl`, `add_time`) VALUES ('头条信息流',".$byte_click_monitor_link_tpl.",".$add_time.")";

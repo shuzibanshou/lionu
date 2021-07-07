@@ -67,7 +67,7 @@ class BaseController extends Controller
 		    echo '安装文件丢失,请手动生成';
 		    exit();
 		} else {
-		    $install_file_content = file_get_contents($install_file_name);
+		    $install_file_content = trim(file_get_contents($install_file_name));
 		    if (!empty($install_file_content)) {
 		        if ($install_file_content !== 'ok') {
 		            $install_file_content = intval($install_file_content);

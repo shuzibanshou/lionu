@@ -352,7 +352,7 @@ class Sysin extends NeedloginController
                 }
                 break;
             default:
-                _json(['code' => 198,'msg' => '参数错误']);
+                _json(['code' => 198,'msg' => '启动软件参数错误']);
                 break;
         } */
     }
