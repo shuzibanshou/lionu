@@ -199,7 +199,7 @@ class Receive extends BaseController
 	public function launch(){
 	    //$deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
 	    $deviceLaunchData = $this->request->getJSON(true);
-	    print_r($deviceLaunchData);
+	    //print_r($deviceLaunchData);
 	    $conf = new \RdKafka\Conf();
 	    
 	    //TopicConf
@@ -212,6 +212,7 @@ class Receive extends BaseController
 	    $rk->setLogLevel(LOG_DEBUG);
 	    $rk->addBrokers('127.0.0.1:9092');
 	    $topic = $rk->newTopic('launch', $topicConf);
+	     echo json_encode($deviceLaunchData);
 	    $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($deviceLaunchData));
 	    
 	    $len = $rk->getOutQLen();
