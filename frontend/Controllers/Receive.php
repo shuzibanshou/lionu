@@ -198,7 +198,7 @@ class Receive extends BaseController
 	 */
 	public function launch(){
 	    //$deviceLaunchData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
-	    $deviceLaunchData = $this->request->getJSON();
+	    $deviceLaunchData = $this->request->getJSON(true);
 	    var_dump($deviceLaunchData);
 	    $conf = new \RdKafka\Conf();
 	    
