@@ -253,7 +253,8 @@ class Receive extends BaseController
 	 * 接收设备注册消息
 	 */
 	public function reg(){
-	    $deviceRegData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    //$deviceRegData = $this->request->getPost(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    $deviceRegData = $this->request->getJSON(true);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();
 	    
@@ -282,7 +283,8 @@ class Receive extends BaseController
 	 * 接收设备付费消息
 	 */
 	public function pay(){
-	    $devicePayData = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    //$devicePayData = $this->request->getVar(null, FILTER_SANITIZE_MAGIC_QUOTES);
+	    $devicePayData = $this->request->getJSON(true);
 	    //dump($info);
 	    $conf = new \RdKafka\Conf();
 	    
