@@ -211,7 +211,7 @@ class Receive extends BaseController
 	    $rk->setLogLevel(LOG_DEBUG);
 	    $rk->addBrokers('127.0.0.1:9092');
 	    $topic = $rk->newTopic('launch', $topicConf);
-	    
+	     var_dump(json_encode($deviceLaunchData));
 	    $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($deviceLaunchData));
 	    
 	    $len = $rk->getOutQLen();
